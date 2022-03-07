@@ -1,0 +1,134 @@
+:root{
+    --main: #000;
+    --container:#e2e2e2;
+    --head1:rgb(6, 138, 247);
+    --head2:rgb(253, 5, 179);
+    --head1dark:rgb(2, 33, 58);
+    --head2dark:rgb(59, 2, 42);
+    --head3dark:rgba(6, 138, 247, 0.521);
+    --head4dark:rgb(253, 5, 179,0.5);
+}
+body{
+    position: relative;
+}
+a{
+    text-decoration: none;
+}
+*{
+    margin: 0px;
+    padding: 0px;
+}
+#container{
+    display: block;
+    width: 100%;
+    height: 100vh;
+}
+.container{
+    width: 98%;
+    height: 400px;
+    display: flex;
+    margin-left: 1.5%;
+    background: white;
+    overflow: hidden;
+    box-shadow: 1px 2px 1px 1px var(--container);
+}
+.top {
+    width: 100%;
+    height: 60px;
+    clip-path: polygon(0 0,100% 0,100% 100%,0 calc(100% - 50px));
+    background: var(--head1);
+  }
+.bottom {
+    width: 100%;
+    height: 60px;
+    clip-path: polygon(0 0,100% 50px,100% 100%,0 100%);
+    margin-top: 40px;
+    background: var(--head2);
+  }
+.nav{
+    position: fixed;
+    height: 60px;
+    width: 100%;
+    top:0;
+    right: 0;
+    background: linear-gradient(-30deg, var(--head1),var(--head2));
+    box-shadow: 2px 1px 1px 2px var(--head1dark);
+    margin-bottom: 10px;
+}
+.nav .nav-item {
+    text-decoration: none;
+    display: inline-block;
+}
+@media screen and (max-width:600px) {
+    .nav-container {
+        position:fixed;
+        top:62px;
+        left: -50%;
+        background:linear-gradient(140deg, var(--head1dark),var(--head2));
+        height: 100vh;
+        width: 50%;
+        z-index: 200;
+        margin-right: 3px;
+        transition:ease-in 5s;
+    }
+    .nav-container .nav-item {
+        position: relative;
+        display: block;
+        width: 98%;
+        background: linear-gradient(#fff,#fff);
+        margin-bottom: 8px;
+        box-shadow: 1px 2px 2px 1px var(--head1dark);
+        border-radius: 0 60px 60px 0;
+        text-align: center;
+        padding-top: 16px;
+        padding-bottom: 16px;
+    }
+    .nav-item .nav-circle {
+        display: inline-block;
+        position: absolute;
+        right: 0;
+        top:1.5px;
+        bottom: 1;
+        margin-right: 2px;
+        width: 47px;
+        height: 47px;
+        background: linear-gradient(30deg,var(--head2dark),var(--head2));
+        border-radius: 180px;
+    }
+    .nav-button{
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        cursor: pointer;
+        /* transform: rotate(90deg); */
+    }
+    .p1{
+        position: relative;
+        display: block;
+        border-top:4px solid #000;
+        width: 30px;
+        top:20px;
+        left: 15px;
+        padding: 2px;
+        /* transform: rotate(28deg); */
+    }
+    .p2{
+        position: relative;
+        display: block;
+        border-top:4px solid #000;
+        width: 30px;
+        top:20px;
+        left: 15px;
+        padding: 2px;
+        }
+    .p3{
+        position: relative;
+        display: block;
+        border-top:4px solid #000;
+        width: 30px;
+        top:20px;
+        left: 15px;
+        padding: 2px;
+        /* transform: rotate(-28deg); */
+    }
+}
