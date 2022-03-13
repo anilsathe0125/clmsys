@@ -1,10 +1,13 @@
 package com.college.lm;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.sql.Timestamp;
 
 public class TestRun {
     public String getString() {
-       BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
-       String rawPassword="Test#8555";
-       return bCryptPasswordEncoder.encode(rawPassword);
+    //    BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
+    //    String rawPassword="Test#8555";
+    Long date=System.currentTimeMillis();
+    Timestamp ts=new Timestamp(date);
+       return date.toString();
     }
 }

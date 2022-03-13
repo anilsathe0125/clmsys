@@ -8,12 +8,12 @@ import com.college.lm.Repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.Rollback;
+
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
+@AutoConfigureTestDatabase
 @Rollback(false)
 public class UserTest {
 @Autowired
@@ -29,6 +29,7 @@ public void testCreateUser(){
     user.setMobile_no("452365");
     user.setPassword("Test#8555");
     user.setUser_role("student");
+
     repo.save(user);
 } 
 @Test
