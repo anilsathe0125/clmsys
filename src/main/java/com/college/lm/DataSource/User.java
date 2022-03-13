@@ -12,8 +12,8 @@ import javax.persistence.Table;
 public class User {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
-private long u_id;
-@Column(nullable = false,unique = true,length = 120)
+private Long u_id;
+@Column(name="email",nullable = false,unique = true,length = 120)
 private String email;
 @Column(nullable = false,length = 64)
 private String password;
@@ -23,14 +23,29 @@ private String first_name;
 private String last_name;
 @Column(length = 10)
 private String mobile_no;
-@Column(length = 10)
+@Column(length = 20)
 private String user_role;
 
-    public long getU_id() {
+
+    public User() {
+    }
+
+    public User(Long u_id, String email, String password, String first_name, String last_name, String mobile_no, String user_role) {
+        this.u_id = u_id;
+        this.email = email;
+        this.password = password;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.mobile_no = mobile_no;
+        this.user_role = user_role;
+    }
+
+
+    public Long getU_id() {
         return this.u_id;
     }
 
-    public void setU_id(long u_id) {
+    public void setU_id(Long u_id) {
         this.u_id = u_id;
     }
 
