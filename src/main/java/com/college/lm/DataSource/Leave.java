@@ -2,7 +2,6 @@ package com.college.lm.DataSource;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,13 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 @Entity
-@Table(name="leave")
+@Table(name="leaves")
 public class Leave {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -27,13 +21,10 @@ public class Leave {
     private Integer getLeave;
     @Column(length=5)
     private Integer balLeave;
-    @OneToOne(fetch=FetchType.LAZY,optional=false)
+    @OneToOne
     @JoinColumn(name="uid")
-    @OnDelete(action=OnDeleteAction.CASCADE)
-    @JsonIgnore
     private User user;
-    @Column(length=5)
-    private Long dete;
+    private String dete;
     
 
     /**
@@ -109,14 +100,14 @@ public class Leave {
     /**
      * @return Long return the dete
      */
-    public Long getDete() {
+    public String getDete() {
         return dete;
     }
 
     /**
      * @param dete the dete to set
      */
-    public void setDete(Long dete) {
+    public void setDete(String dete) {
         this.dete = dete;
     }
 

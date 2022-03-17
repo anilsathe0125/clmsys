@@ -5,6 +5,7 @@ import com.college.lm.Exception.UserExitException;
 import com.college.lm.Repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,14 +15,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
+
 @Controller
 public class Home  {
     @Autowired
     private UserRepository userRepo;
-    @GetMapping("")
-    @ResponseBody
-    public Object getHome(){
-        return userRepo.findByEmail("abc@in.com");
+    @GetMapping("index.html")
+    public String getHome(Model model){
+        model.addAttribute("pageName","Admin/dashboard");
+        model.addAttribute("pageTitle", "Admin Dashboard");
+        return "index";
     }
     @GetMapping("/login.html")
     public String getLogin() {
@@ -48,6 +51,32 @@ public class Home  {
                 model.addAttribute("user", user);
                 return "register";
         }
+    }
+    @GetMapping("loginSucess")
+    @ResponseBody
+    public String userRedirect(Authentication auth){
+            try{
+            String userName=auth.getName();
+            User uObj=userRepo.findByEmail(userName);
+            String UserRoll=uObj.getUser_role();
+            if(UserRoll.equals("admin")){
+            return "redirect:/dashboard.html";
+            }
+            else if(UserRoll.equals("student")){
+            return "redirect:/login.html";
+            }
+            else if(UserRoll.equals("hod")){
+            return "redirect:/login.html";
+            }
+            else if(UserRoll.equals("staff")){
+            return "redirect:/login.html";
+            }
+            else{
+            return "redirect:/login.html";
+            }
+            }catch(Exception e){
+               return "redirect:/login.html";
+            }
     }
 
 }

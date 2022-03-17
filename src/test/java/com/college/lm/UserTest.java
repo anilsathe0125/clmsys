@@ -1,20 +1,13 @@
 package com.college.lm;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.college.lm.DataSource.User;
 import com.college.lm.Repository.UserRepository;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@DataJpaTest
-@AutoConfigureTestDatabase
-@Rollback(false)
 public class UserTest {
 @Autowired
 private UserRepository repo;
@@ -34,6 +27,8 @@ public void testCreateUser(){
 } 
 @Test
 public void testUserByEmail(){
-    System.out.println(new TestRun().getString());
+    BCryptPasswordEncoder bEncoder=new BCryptPasswordEncoder();
+    System.out.println(bEncoder.encode("Admin@8585"));
 }
 }
+//INSERT INTO `users` (`u_id`, `email`, `first_name`, `last_name`, `mobile_no`, `password`, `permision`, `status`, `timestamp`, `user_role`, `dpid`) VALUES (NULL, 'admin@clmsys.in', 'Administrator', 'Admin', '8888888888', '$2a$10$QogKOqZrHx2c.KgAfGhlIe41mXTiXlWqib8DsVJTplgWY4Il8OFYK', b'000', 'approved', NULL, 'admin', '')
