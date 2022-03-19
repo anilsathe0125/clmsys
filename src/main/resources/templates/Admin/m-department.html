@@ -7,26 +7,35 @@
             <div class="col-18 col-lg-12 col-xxl-9 d-flex">
                 <div class="card flex-fill">
                     <div class="card-header">
-
                         <h5 class="card-title mb-0">List Department</h5>
+
+                        <div class="col-sm-12">
+                            <button data-toggle="modal" data-target="#mymodal" data-id="/Admin/department_add.html" id="menu" class="btn btn-sm btn-primary waves-effect waves-light"><span class="btn-label"><i class="fa fa-plus"></i></span>ADD Department</button>
+
+                            <!--                            <a th:href="@{/Admin/department_add.html}"><button class="btn btn-sm btn-primary waves-effect waves-light"><span class="btn-label"><i class="fa fa-plus"></i></span>ADD DEPARTMENT</button></a>-->
                     </div>
                     <table class="table table-hover my-0">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th class="d-none d-xl-table-cell">Start Date</th>
-                                <th class="d-none d-xl-table-cell">End Date</th>
-                                <th>Status</th>
-                                <th class="d-none d-md-table-cell">Assignee</th>
+                                <th># ID</th>
+                                <th class="d-none d-xl-table-cell">NAME</th>
+                                <th class="d-none d-xl-table-cell">STATUS</th>
+                                <th class="d-none d-xl-table-cell">UPDATE</th>
+                                <th class="d-none d-xl-table-cell">DELETE</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Project Apollo</td>
-                                <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                <td><span class="badge bg-success">Done</span></td>
-                                <td class="d-none d-md-table-cell">Vanessa Tucker</td>
+                            <tr th:each="dl : ${dlist}">
+                                <td th:text="${dl.did}">ID</td>
+                                <td class="d-none d-xl-table-cell" th:text="${dl.dname}">NAME</td>
+                                <td class="d-none d-xl-table-cell" th:if="${dl.status==false}">DISABLE</td>
+                                <td class="d-none d-xl-table-cell" th:if="${dl.status==true}">UNABLE</td>
+                                <td class="d-none d-xl-table-cell">
+                                <button data-toggle="modal" data-target="#mymodal" th:attr="data-id=@{/Admin/department_update.html(id=${dl.did})}" id="menu" class="btn btn-sm btn-warning waves-effect waves-light"><span class="btn-label"><i class="fa fa-plus"></i></span>Update</button>
+                                </td>
+                                <td class="d-none d-xl-table-cell">
+                                    <button data-toggle="modal" data-target="#mymodal" th:attr="data-id=@{/Admin/department_delete.html(id=${dl.did})}" id="menu" class="btn btn-sm btn-danger waves-effect waves-light"><span class="btn-label"><i class="fa fa-plus"></i></span>DELETE</button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -34,6 +43,5 @@
             </div>
         </div>
     </div>
-
     
 </main>

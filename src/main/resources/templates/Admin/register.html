@@ -33,30 +33,26 @@
 									<div class="text-center mt-4">
 										<h1 class="h2">Register Form</h1>
 									</div>
-									<form method="post" th:action="@{/register.html}"
-									th:object="${user}">
-									<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
-										<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
-									</div>
+									<form method="post" th:action="@{/register.html}">
 										<div class="mb-3">
 											<label class="form-label">First Name</label>
-											<input class="form-control form-control-lg" type="text" th:field="*{first_name}" placeholder="Enter your first name" />
+											<input class="form-control form-control-lg" type="text" placeholder="Enter your first name" />
 										</div>
 										<div class="mb-3">
 											<label class="form-label">Last Name</label>
-											<input class="form-control form-control-lg" type="text" th:field="*{last_name}" placeholder="Enter your last name" />
+											<input class="form-control form-control-lg" type="text" placeholder="Enter your last name" />
 										</div>
 										<div class="mb-3">
 											<label class="form-label">Email</label>
-											<input class="form-control form-control-lg" type="email" th:field="*{email}" placeholder="Enter your email" />
+											<input class="form-control form-control-lg" type="email" placeholder="Enter your email" />
 										</div>
 										<div class="mb-3">
 											<label class="form-label">Mobile Number</label>
-											<input class="form-control form-control-lg" type="number" th:field="*{mobile_no}" placeholder="Enter your mobile no" maxlength="10" required/>
+											<input class="form-control form-control-lg" type="number" placeholder="Enter your mobile no" maxlength="10" required/>
 										</div>
 										<div class="mb-3">
 											<label class="form-label">User Type</label>
-											<select class="form-control form-control-lg" th:field="*{user_role}" placeholder="Select Type">
+											<select class="form-control form-control-lg" placeholder="Select Type">
 												<option value="student">STUDENT</option>
 												<option value="staff">STAFF</option>
 											</select>

@@ -1,7 +1,10 @@
 package com.college.lm.Controller;
 
+import com.college.lm.DataSource.Leave;
 import com.college.lm.DataSource.User;
 import com.college.lm.Exception.UserExitException;
+import com.college.lm.Repository.DepartMentRepo;
+import com.college.lm.Repository.LeaveRepo;
 import com.college.lm.Repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class Home  {
     @Autowired
     private UserRepository userRepo;
+    @Autowired
+    private DepartMentRepo departMentRepo;
+    @Autowired
+    private LeaveRepo leaveRepo;
     @GetMapping("index.html")
     public String getHome(Model model){
         model.addAttribute("pageName","Admin/dashboard");
@@ -33,6 +40,7 @@ public class Home  {
     @GetMapping("register.html")
     public String Register(Model model){
         model.addAttribute("user",new User());
+        model.addAttribute("depatment",departMentRepo.findAllByStatus(true));
         return "register";
     }
     @PostMapping("register.html")
@@ -40,11 +48,15 @@ public class Home  {
         model.addAttribute(user);
         BCryptPasswordEncoder ecode=new BCryptPasswordEncoder();
         user.setPassword(ecode.encode(user.getPassword()));
+        Leave leave=new Leave();
+        leave.setTotal(6);
             try {
             if(userRepo.findByEmail(user.getEmail())!=null){
                 throw new UserExitException("User Email already exit");
             }
-            userRepo.save(user);
+            leave.setUser(userRepo.save(user));
+            leave.setDete(""+System.currentTimeMillis());
+            leaveRepo.save(leave);
             return "login.html";
             } catch (UserExitException e) {
                 bindingResult.rejectValue("email", "user.email","An account already exists for this email.");
@@ -53,14 +65,13 @@ public class Home  {
         }
     }
     @GetMapping("loginSucess")
-    @ResponseBody
     public String userRedirect(Authentication auth){
             try{
             String userName=auth.getName();
             User uObj=userRepo.findByEmail(userName);
             String UserRoll=uObj.getUser_role();
             if(UserRoll.equals("admin")){
-            return "redirect:/dashboard.html";
+            return "redirect:Admin/dashboard.html";
             }
             else if(UserRoll.equals("student")){
             return "redirect:/login.html";

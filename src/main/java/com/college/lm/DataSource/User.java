@@ -33,6 +33,8 @@ private String last_name;
 private String mobile_no;
 @Column(length = 20)
 private String user_role;
+@Column(length = 20)
+private String user_gender;
 private boolean permision;
 @ManyToOne(fetch= FetchType.LAZY,optional=false)
 @JoinColumn(name="dpid")
@@ -205,4 +207,11 @@ private Long timestamp;
         this.status = status;
     }
 
+    public String getUser_gender() {
+        return user_gender;
+    }
+
+    public void setUser_gender(String user_gender) {
+        this.user_gender = user_gender;
+    }
 }
