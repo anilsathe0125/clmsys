@@ -21,8 +21,7 @@ public void testCreateUser(){
     user.setLast_name("XYZ");
     user.setMobile_no("452365");
     user.setPassword("Test#8555");
-    user.setUser_role("student");
-
+    user.setRole("student");
     repo.save(user);
 } 
 @Test

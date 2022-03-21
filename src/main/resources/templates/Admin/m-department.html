@@ -28,13 +28,16 @@
                             <tr th:each="dl : ${dlist}">
                                 <td th:text="${dl.did}">ID</td>
                                 <td class="d-none d-xl-table-cell" th:text="${dl.dname}">NAME</td>
-                                <td class="d-none d-xl-table-cell" th:if="${dl.status==false}">DISABLE</td>
-                                <td class="d-none d-xl-table-cell" th:if="${dl.status==true}">UNABLE</td>
+                                <td class="d-none d-xl-table-cell" th:if="${dl.status==true}"><span class="badge bg-success">UNABLE</span></td>
+                                <td class="d-none d-xl-table-cell" th:if="${dl.status==false}"> <span class="badge bg-danger">DISABLE</span></td>
                                 <td class="d-none d-xl-table-cell">
-                                <button data-toggle="modal" data-target="#mymodal" th:attr="data-id=@{/Admin/department_update.html(id=${dl.did})}" id="menu" class="btn btn-sm btn-warning waves-effect waves-light"><span class="btn-label"><i class="fa fa-plus"></i></span>Update</button>
+                                <button data-toggle="modal" data-target="#mymodal" th:attr="data-id=@{/Admin/department_update.html(id=${dl.did})}" id="menu" class="btn btn-sm btn-warning waves-effect waves-light"><span class="btn-label">
+                                    <i class="fa-solid fa-pen-to-square"></i></span>
+                                    Update
+                                </button>
                                 </td>
                                 <td class="d-none d-xl-table-cell">
-                                    <button data-toggle="modal" data-target="#mymodal" th:attr="data-id=@{/Admin/department_delete.html(id=${dl.did})}" id="menu" class="btn btn-sm btn-danger waves-effect waves-light"><span class="btn-label"><i class="fa fa-plus"></i></span>DELETE</button>
+                                    <a title="Delete" class="btn btn-sm btn-danger waves-effect text-white waves-light" th:attr="onclick=|delete_row('department',${dl.did})|">DELETE</a>
                                 </td>
                             </tr>
                         </tbody>

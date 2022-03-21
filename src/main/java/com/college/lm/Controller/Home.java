@@ -54,9 +54,17 @@ public class Home  {
             if(userRepo.findByEmail(user.getEmail())!=null){
                 throw new UserExitException("User Email already exit");
             }
-            leave.setUser(userRepo.save(user));
-            leave.setDete(""+System.currentTimeMillis());
-            leaveRepo.save(leave);
+            if (user.getRole().equals("student")) {
+                user.setStatus("active");
+                leave.setUser(userRepo.save(user));
+                leave.setDete("" + System.currentTimeMillis());
+                leaveRepo.save(leave);
+            }
+            else {
+                leave.setUser(userRepo.save(user));
+                leave.setDete("" + System.currentTimeMillis());
+                leaveRepo.save(leave);
+            }
             return "login.html";
             } catch (UserExitException e) {
                 bindingResult.rejectValue("email", "user.email","An account already exists for this email.");
@@ -69,7 +77,7 @@ public class Home  {
             try{
             String userName=auth.getName();
             User uObj=userRepo.findByEmail(userName);
-            String UserRoll=uObj.getUser_role();
+            String UserRoll=uObj.getRole();
             if(UserRoll.equals("admin")){
             return "redirect:Admin/dashboard.html";
             }

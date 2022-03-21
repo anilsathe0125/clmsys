@@ -1,0 +1,25 @@
+<nav class="navbar navbar-expand navbar-light navbar-bg">
+    <a class="sidebar-toggle js-sidebar-toggle">
+<i class="hamburger align-self-center"></i>
+</a>
+
+    <div class="navbar-collapse collapse">
+        <ul class="navbar-nav navbar-align">
+            <li class="nav-item dropdown">
+                <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
+                    <i class="align-middle" data-feather="settings"></i>
+                </a>
+                <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
+                <img class="avatar img-fluid rounded me-1" th:attr="src=|https://ui-avatars.com/api/?name=${userDetails.first_name}&background=0D8ABC&color=fff|" th:alt="${userDetails.first_name}"/> <span class="text-dark" th:text="${userDetails.first_name}">Charles Hall</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="index.html"><i class="align-middle me-1" data-feather="settings"></i> Settings </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/logout.html">Logout</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>

@@ -12,17 +12,22 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name="users")
-public class User {
+public class User implements Serializable {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private Long u_id;
 @Column(name="email",nullable = false,unique = true,length = 120)
 private String email;
+@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 @Column(nullable = false,length = 64)
 private String password;
 @Column(nullable = false, length = 30)
@@ -32,14 +37,13 @@ private String last_name;
 @Column(length = 10)
 private String mobile_no;
 @Column(length = 20)
-private String user_role;
+private String role;
 @Column(length = 20)
 private String user_gender;
-private boolean permision;
+private boolean permission;
 @ManyToOne(fetch= FetchType.LAZY,optional=false)
 @JoinColumn(name="dpid")
 @OnDelete(action= OnDeleteAction.CASCADE)
-@JsonIgnore
 private DepartMent department;
 @Column(length = 20)
 private String status;
@@ -51,15 +55,15 @@ private Long timestamp;
     }
 
 
-    public User(Long u_id, String email, String password, String first_name, String last_name, String mobile_no, String user_role, boolean permision, DepartMent department, String status) {
+    public User(Long u_id, String email, String password, String first_name, String last_name, String mobile_no, String role, boolean permission, DepartMent department, String status) {
         this.u_id = u_id;
         this.email = email;
         this.password = password;
         this.first_name = first_name;
         this.last_name = last_name;
         this.mobile_no = mobile_no;
-        this.user_role = user_role;
-        this.permision = permision;
+        this.role = role;
+        this.permission = permission;
         this.department = department;
         this.status = status;
         this.timestamp = System.currentTimeMillis();
@@ -152,31 +156,31 @@ private Long timestamp;
     }
 
     /**
-     * @return String return the user_role
+     * @return String return the role
      */
-    public String getUser_role() {
-        return user_role;
+    public String getRole() {
+        return role;
     }
 
     /**
-     * @param user_role the user_role to set
+     * @param role the user_role to set
      */
-    public void setUser_role(String user_role) {
-        this.user_role = user_role;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     /**
-     * @return boolean return the permision
+     * @return boolean return the permission
      */
-    public boolean isPermision() {
-        return permision;
+    public boolean isPermission() {
+        return permission;
     }
 
     /**
-     * @param permision the permision to set
+     * @param permission the permission to set
      */
-    public void setPermision(boolean permision) {
-        this.permision = permision;
+    public void setPermission(boolean permission) {
+        this.permission = permission;
     }
 
     /**

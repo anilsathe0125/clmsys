@@ -14,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
 @Configurable
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -41,18 +43,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-        .antMatchers("/loginSucess").authenticated()
-        .anyRequest().permitAll()
-        .and()
-        .formLogin()
-        .loginPage("/login.html")
-        .permitAll()
-        .usernameParameter("email")
-        .defaultSuccessUrl("/loginSucess")
-        .permitAll()
-        .and()
-        .logout().logoutSuccessUrl("/").permitAll();
-    }
+                .antMatchers("/loginSucess").authenticated()
+                .anyRequest().permitAll()
+                .and()
+                .formLogin()
+                .loginPage("/login.html")
+                .permitAll()
+                .usernameParameter("email")
+                .defaultSuccessUrl("/loginSucess")
+                .permitAll()
+                .and()
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout.html"))
+                .logoutSuccessUrl("/login.html")
+                .permitAll();
+   }
 
-    
+
 }

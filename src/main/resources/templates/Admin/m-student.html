@@ -1,0 +1,42 @@
+<main class="content">
+    <div class="container-fluid p-0">
+        <h1 class="h3 mb-3"><strong th:text="${pageTitle}">Page Title</strong> </h1>
+    <div class="card">
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>##</th>
+                    <th>Student Name</th>
+                    <th>Email</th>
+                    <th>Mobile Number</th>
+                    <th>Gender</th>
+                    <th>Status</th>
+                    <th>Department</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="stlist,iterator : ${slist}">
+                <td th:text="${iterator.index}">number</td>
+                <td>
+                    <button data-toggle="modal" data-target="#mymodal" id="menu" class="btn btn-sm btn-warning waves-effect waves-light"><span class="btn-label">
+                                    <i class="fa-solid fa-pen-to-square"></i></span>
+                        Update
+                    </button>
+                </td>
+                <td><strong th:text="${stlist.first_name}+' '+${stlist.last_name}">Student Name</strong></td>
+                <td th:text="${stlist.email}"> Email </td>
+                <td th:text="${stlist.mobile_no}"> Mobile Number</td>
+                <td th:text="${stlist.user_gender}"> Gender </td>
+                <td th:text="${stlist.status}"> Status </td>
+                <td th:text="${stlist.department.dname}"> Department </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+    </div>
+</main>
