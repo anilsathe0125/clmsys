@@ -2,6 +2,7 @@ package com.college.lm.Controller;
 
 import com.college.lm.DataSource.Leave;
 import com.college.lm.DataSource.User;
+import com.college.lm.Exception.CustomExceotion;
 import com.college.lm.Exception.UserExitException;
 import com.college.lm.Repository.DepartMentRepo;
 import com.college.lm.Repository.LeaveRepo;
@@ -15,8 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 
 
 @Controller
@@ -29,9 +28,9 @@ public class Home  {
     private LeaveRepo leaveRepo;
     @GetMapping("index.html")
     public String getHome(Model model){
-        model.addAttribute("pageName","Admin/dashboard");
-        model.addAttribute("pageTitle", "Admin Dashboard");
-        return "index";
+        model.addAttribute("pageName","common/index");
+        model.addAttribute("pageTitle", "College Leave Management System");
+        return "common/index";
     }
     @GetMapping("/login.html")
     public String getLogin() {
@@ -51,6 +50,10 @@ public class Home  {
         Leave leave=new Leave();
         leave.setTotal(6);
             try {
+            if (user.getPassword().length()<=6)
+                throw new CustomExceotion("Password not less 6 than");
+            if (user.getMobile_no().length()!=10)
+                throw new CustomExceotion("Mobile number length not 10");
             if(userRepo.findByEmail(user.getEmail())!=null){
                 throw new UserExitException("User Email already exit");
             }
@@ -66,8 +69,8 @@ public class Home  {
                 leaveRepo.save(leave);
             }
             return "login.html";
-            } catch (UserExitException e) {
-                bindingResult.rejectValue("email", "user.email","An account already exists for this email.");
+            } catch (UserExitException | CustomExceotion e) {
+                bindingResult.rejectValue("email", "user.email",e.getMessage());
                 model.addAttribute("user", user);
                 return "register";
         }
@@ -82,13 +85,13 @@ public class Home  {
             return "redirect:Admin/dashboard.html";
             }
             else if(UserRoll.equals("student")){
-            return "redirect:/login.html";
+            return "redirect:Student/dashboard.html";
             }
             else if(UserRoll.equals("hod")){
-            return "redirect:/login.html";
+            return "redirect:Staff/dashboard.html";
             }
             else if(UserRoll.equals("staff")){
-            return "redirect:/login.html";
+            return "redirect:Staff/dashboard.html";
             }
             else{
             return "redirect:/login.html";

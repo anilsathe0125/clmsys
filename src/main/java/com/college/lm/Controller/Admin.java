@@ -1,5 +1,6 @@
 package com.college.lm.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,7 +36,7 @@ public class Admin {
             model.addAttribute("dashboard_student",UserRepo.findByRole("student").size());
             model.addAttribute("userDetails",UserRepo.findByEmail(auth.getName()));
             }
-            return Login.equals("admin")?"index":"redirect:/loginSucess";
+            return Login.equals("admin")?"common/index":"redirect:/loginSucess";
             }
             catch(Exception e){
                 return "login.html";
@@ -55,7 +56,7 @@ public class Admin {
             model.addAttribute("userDetails",UserRepo.findByEmail(auth.getName()));
             model.addAttribute("dlist", dl);
         }
-        return Login.equals("admin")?"index":"redirect:/loginSucess";
+        return Login.equals("admin")?"common/index":"redirect:/loginSucess";
         }
         catch(Exception e){
             return "login.html";
@@ -148,12 +149,52 @@ public class Admin {
                 model.addAttribute("userDetails",UserRepo.findByEmail(auth.getName()));
                 model.addAttribute("slist", st);
             }
-            return Login.equals("admin")?"index":"redirect:/loginSucess";
+            return Login.equals("admin")?"common/index":"redirect:/loginSucess";
         }
         catch(Exception e){
             return "login.html";
         }
     }
+    @GetMapping("Admin/student_update.html")
+    public String getUpdateStudent(@RequestParam(value = "id") Long id, Model model, Authentication auth){
+        try{
+            if (id==null) return "redirect:/Admin/m-student";
+            else {
+//                 departMent = new DepartMent();
+//                Optional<DepartMent> departMent1 = drepo.findById(id);
+//                departMent.setDname(departMent1.get().getDname());
+//                departMent.setStatus(departMent1.get().getStatus());
+//                departMent.setDid(departMent1.get().getDid());
+                model.addAttribute("pageTitle", "Update Student");
+                model.addAttribute("userDetails",UserRepo.findByEmail(auth.getName()));
+            }
+            String Login = this.userType(auth);
+            return Login.equals("admin")?"Admin/update_student":"redirect:/loginSucess";
+        }
+        catch(Exception e){
+            return "login.html";
+        }
+    }
+    @PostMapping("Admin/student_update.html")
+    public Object updateStudent(@RequestParam Map<String,String> getParam,Authentication auth){
+        try{
+            if (!getParam.get("balance").equals("")){
+
+            }
+            if (!getParam.get("password").equals("") && getParam.get("password").length()>=6){
+                User user=UserRepo.getById(Long.valueOf(getParam.get("id")));
+                user.setPassword(getParam.get("password"));
+                UserRepo.save(user);
+            }
+            //drepo.save(departMent);
+            String Login = this.userType(auth);
+            return Login.equals("admin")?"redirect:/Admin/m-student.html":"redirect:/loginSucess";
+        }
+        catch(Exception e){
+            return "login.html";
+        }
+    }
+
     /**
      *-------------------------- Manage Staff ----------------------------------------
      */
@@ -168,7 +209,7 @@ public class Admin {
                 model.addAttribute("userDetails",UserRepo.findByEmail(auth.getName()));
                 model.addAttribute("slist", st);
             }
-            return Login.equals("admin")?"index":"redirect:/loginSucess";
+            return Login.equals("admin")?"common/index":"redirect:/loginSucess";
         }
         catch(Exception e){
             return "login.html";

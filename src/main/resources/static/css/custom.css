@@ -57,7 +57,19 @@ button.close {
 .swal-overlay {
   background-color: rgba(43, 165, 137, 0.45);
 }
-
+.home-play{
+    display: flex;
+    background: url(/img/clg-sys.png) 91% 55%;
+    height: 100%;
+    filter: brightness(0.5);
+}
+.fa-circle-play {
+    color: #385721;
+    position: absolute;
+    font-size: 100px;
+    top: 50%;
+    left: 50%;
+}
 .select2-container--open .select2-dropdown--below {
     margin-top: 50px;
 }

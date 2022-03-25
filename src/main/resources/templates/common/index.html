@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
+    <meta name="author" content="College Leave Management System">
+    <meta name="keywords" content="College Leave Management System, SpringBoot application">
+    <meta th:name="${_csrf.parameterName}" th:content="${_csrf.token}"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
+
+    <title>College Leave Management Dashboard</title>
+
+    <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/appmain.css" rel="stylesheet">
+    <link href="/css/custom.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/09307f62ef.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="wrapper">
+    <div th:replace="/common/navbar.html"></div>
+    <div class="main">
+        <div th:replace="/common/head-nav.html"></div>
+        <th:bloack th:replace="${pageName}">
+            <div th:replace="/common/footer.html"></div>
+            <div id="modal-loader" style="display: none; text-align: center;"> <img src="assets/images/preloader.gif" /> </div>
+
+            <!-- content will be load here -->
+            <div id="dynamic-content"></div>
+    </div>
+    <div id="mymodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content p-0 b-0">
+                <div class="panel panel-color panel-primary">
+                    <div class="panel-heading">
+                        <button type="button" class="close m-t-5" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="panel-title text-light" th:text="${pageTitle}"></h3>
+                    </div>
+                    <div class="modal-body">
+                        <div id="modal-loader" style="display: none; text-align: center;"> <img src="/img/preloader.gif" /> </div>
+
+                        <!-- content will be load here -->
+                        <div id="dynamic-content"></div>
+                    </div>
+                    <div class="modal-footer"> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(document).on('click', '#menu', function(e) {
+            e.preventDefault();
+            var url = $(this).data('id'); // it will get action url
+            $('#dynamic-content').html(''); // leave it blank before ajax call
+            $('#modal-loader').show(); // load ajax loader
+            $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html'
+                })
+            .done(function(data) {
+                $('#dynamic-content').html('');
+                $('#dynamic-content').html(data); // load response
+                $('#modal-loader').hide(); // hide ajax loader
+            })
+            .fail(function() {
+                $('#dynamic-content').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
+                $('#modal-loader').hide();
+            });
+        });
+    });
+</script>
+<script type="text/javascript">
+    function delete_row(table_name, row_id) {
+        url ='/Admin/delete_record'
+        swal({
+            title: 'Are you sure?',
+            text: "It will be deleted permanently!",
+            icon: "warning",
+            buttons: true,
+            buttons: ["Cancel", "Delete"],
+            dangerMode: true,
+            closeOnClickOutside: false
+            })
+        .then(function(confirmed){
+            if (confirmed){
+                 $.ajax({
+                    url: url,
+                    type: 'POST',
+                    headers: {"X-CSRF-TOKEN": $("meta[name='_csrf']").attr("content")},
+                    data: 'row_id=' + row_id + '&table_name=' + table_name,
+                    dataType: 'json'
+                 })
+                 .done(function(response){
+                    if(response.status==="success"){
+                    swal.stopLoading();
+                    swal("Deleted!", response.message, response.status);
+                    location.reload();
+                    }
+                    else{
+                    swal.stopLoading();
+                    swal('Oops...', response.message, response.status);
+                    }
+                 })
+                 .fail(function(){
+                    swal('Oops...', 'Something went wrong with ajax !', 'error');
+                 })
+            }
+        })
+    }
+</script>
+<script type='text/javascript' src="/js/app.js"></script>
+<script type='text/javascript' src="/js/bootstrap.js"></script>
+<script type='text/javascript' src="/js/sweetalert.min.js"></script>
+</body>
+</html>

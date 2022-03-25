@@ -36,19 +36,18 @@
 									<form method="post" th:action="@{/login.html}">
 										<div class="mb-3">
 											<label class="form-label">Email</label>
-											<input class="form-control form-control-lg" type="email" name="email" placeholder="Enter your email" />
+											<input class="form-control form-control-lg" type="email" name="email" placeholder="Admin/ Staff /User email ID" />
 										</div>
 										<div class="mb-3">
 											<label class="form-label">Password</label>
 											<input class="form-control form-control-lg" type="password" name="password" placeholder="Enter your password" />
 											<small>
-            							<a href="index.html">Forgot password?</a>
+            							<a href="register.html">For New User?</a>
           								</small>
 										</div>
 										<div th:if="${param.error}" class="alert alert-error"> Invalid username and password.</div>
 										<div class="text-center mt-3">
 											<input type="submit" value="Sign in" class="btn btn-lg btn-primary"/>
-											<!-- <button type="submit" class="btn btn-lg btn-primary">Sign in</button> -->
 										</div>
 									</form>
 								</div>

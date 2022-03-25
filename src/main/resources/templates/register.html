@@ -36,7 +36,7 @@
 									<form method="post" th:action="@{/register.html}"
 									th:object="${user}">
 									<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
-										<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
+										<p class="text-danger" th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
 									</div>
 										<div class="mb-3">
 											<label class="form-label">First Name</label>
@@ -52,7 +52,7 @@
 										</div>
 										<div class="mb-3">
 											<label class="form-label">Mobile Number</label>
-											<input class="form-control form-control-lg" type="number" th:field="*{mobile_no}" placeholder="Enter your mobile no" maxlength="10" required/>
+											<input class="form-control form-control-lg" datatype="number" type="number" th:field="*{mobile_no}" placeholder="Enter your mobile no" minlength="10" maxlength="10" required/>
 										</div>
 										<div class="mb-3">
 											<label class="form-label">Gender</label>
