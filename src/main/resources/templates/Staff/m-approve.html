@@ -1,0 +1,54 @@
+<main class="content">
+    <div class="container-fluid p-0">
+
+        <h1 class="h3 mb-3"><strong th:text="${pageTitle}">Page Title</strong> </h1>
+
+        <div class="row">
+            <div class="col-18 col-lg-12 col-xxl-9 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">List Leave</h5>
+                        <table class="table table-hover my-0" th:if="${error_message==null}">
+                            <thead>
+                            <tr>
+                                <th># ID</th>
+                                <th class="d-none d-xl-table-cell">FROM DATE</th>
+                                <th class="d-none d-xl-table-cell">TO DATE</th>
+                                <th class="d-none d-xl-table-cell">Leave Type</th>
+                                <th class="d-none d-xl-table-cell">Reason</th>
+                                <th class="d-none d-xl-table-cell">STATUS</th>
+                                <th class="d-none d-xl-table-cell">APPROVE</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="aleave,itor : ${aleave}">
+                                <td th:text="${itor.count}">ID</td>
+                                <td class="d-none d-xl-table-cell" th:text="${aleave.date_from}">date_from</td>
+                                <td class="d-none d-xl-table-cell" th:text="${aleave.date_to}">date_to</td>
+                                <td class="d-none d-xl-table-cell" th:text="${aleave.leaveType}">leave_type</td>
+                                <td class="d-none d-xl-table-cell" th:text="${#strings.abbreviate(aleave.reason,20)}">reason</td>
+                                <td class="d-none d-xl-table-cell" th:if="${aleave.status=='approve'}"><span class="badge bg-success">APPROVE</span></td>
+                                <td class="d-none d-xl-table-cell" th:if="${aleave.status=='pending'}"> <span class="badge bg-danger">PENDING</span></td>
+                                <td class="d-none d-xl-table-cell" th:if="${aleave.status=='cancel'}"> <span class="badge bg-secondary">CANCEL</span></td>
+                                <td class="d-none d-xl-table-cell">
+                                    <button data-toggle="modal" data-target="#mymodal" th:attr="data-id=@{/Staff/leave_approve.html(id=${aleave.l_id})}" id="menu" class="btn btn-sm btn-warning waves-effect waves-light"><span class="btn-label">
+                                        <i class="fa-solid fa-thumbs-up"></i></span>
+                                        Approve
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <h4 th:if="${error_message!=null}" th:text="${error_message}"></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</main>
+<script type="text/javascript">
+    $(document).ready(function(){
+            $(".sidebar-item").removeClass(".active");
+            $(".sidebar-item").children(1).addClass(".active");
+    });
+</script>

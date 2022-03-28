@@ -1,14 +1,14 @@
 
 <h1 class="h3 mb-3"><strong th:text="${pageTitle}">Page Title</strong> </h1>
 <form method="post" th:action="@{/Admin/student_update.html}">
-    <input name="id" th:value="${userDetails.u_id}" type="text" hidden/>
+    <input name="id" th:value="${updateUser}" type="text" hidden/>
     <div class="mb-3">
         <label class="form-label">Leave Balance</label>
-        <input class="form-control form-control-lg" name="balance" type="text" placeholder="Add Balance" required/>
+        <input class="form-control form-control-lg" name="balance" type="text" placeholder="Add Balance"/>
     </div>
     <div class="mb-3">
         <label class="form-label">Update Password</label>
-        <input class="form-control form-control-lg"  type="text" name="password" minlength="6" maxlength="12" placeholder="Enter new password" required/>
+        <input class="form-control form-control-lg"  type="text" name="password" minlength="6" maxlength="12" placeholder="Enter new password"/>
     </div>
 
     <div class="form-group">

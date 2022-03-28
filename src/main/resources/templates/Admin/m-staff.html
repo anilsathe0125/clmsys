@@ -14,6 +14,7 @@
                     <th>Email</th>
                     <th>Mobile Number</th>
                     <th>Gender</th>
+                    <th>Permission</th>
                     <th>Status</th>
                     <th>Department</th>
                 </tr>
@@ -31,8 +32,10 @@
                     <td th:text="${stlist.email}"> Email </td>
                     <td th:text="${stlist.mobile_no}"> Mobile Number</td>
                     <td th:text="${stlist.user_gender}"> Gender </td>
-                    <td th:text="${stlist.permission}"> Status </td>
-                    <td th:text="${stlist.status}"> Status </td>
+                    <td role="button" th:attr="onclick=|setPermission_staff(${stlist.u_id},'1')|" th:text="${stlist.permission}" th:if="${stlist.permission==false}"> Permission </td>
+                    <td role="button" th:attr="onclick=|setPermission_staff(${stlist.u_id},'0')|" th:text="${stlist.permission}" th:if="${stlist.permission==true}"> Permission </td>
+                    <td role="button" th:attr="onclick=|disable_staff(${stlist.u_id})|" class="d-none d-xl-table-cell" th:if="${stlist.status=='active'}"><span class="badge bg-success">UNABLE</span></td>
+                    <td role="button" th:attr="onclick=|unable_staff(${stlist.u_id})|" class="d-none d-xl-table-cell" th:if="${stlist.status==null}"> <span class="badge bg-danger">DISABLE</span></td>
                     <td th:text="${stlist.department.dname}"> Department </td>
                 </tr>
                 </tbody>
@@ -42,3 +45,104 @@
         </div>
     </div>
 </main>
+<script type="text/javascript">
+    function unable_staff(id) {
+        url ='/Admin/unable_staff.html'
+        swal({
+            title: 'Are you sure?',
+            text: "It will be Unable!",
+            icon: "warning",
+            buttons: true,
+            buttons: ["Cancel", "Unable"],
+            dangerMode: true,
+            closeOnClickOutside: false
+            })
+        .then(function(confirmed){
+            if (confirmed){
+                 $.ajax({
+                    url: url,
+                    type: 'POST',
+                    headers: {"X-CSRF-TOKEN": $("meta[name='_csrf']").attr("content")},
+                    data: 'user_id=' + id + '&user_status=1',
+                    dataType: 'json'
+                 })
+                 .done(function(response){
+                    if(response.status==="success"){
+                    swal.stopLoading();
+                    swal("Unable!", response.message, response.status);
+                    location.reload();
+                    }
+                    else{
+                    swal.stopLoading();
+                    swal('Oops...', response.message, response.status);
+                    }
+                 })
+                 .fail(function(){
+                    swal('Oops...', 'Something went wrong with ajax !', 'error');
+                 })
+            }
+        })
+    }
+        function disable_staff(id) {
+        url ='/Admin/unable_staff.html'
+        swal({
+            title: 'Are you sure?',
+            text: "It will be Unable!",
+            icon: "warning",
+            buttons: true,
+            buttons: ["Cancel", "Disable"],
+            dangerMode: true,
+            closeOnClickOutside: false
+            })
+        .then(function(confirmed){
+            if (confirmed){
+                 $.ajax({
+                    url: url,
+                    type: 'POST',
+                    headers: {"X-CSRF-TOKEN": $("meta[name='_csrf']").attr("content")},
+                    data: 'user_id=' + id + '&user_status=0',
+                    dataType: 'json'
+                 })
+                 .done(function(response){
+                    if(response.status==="success"){
+                    swal.stopLoading();
+                    swal("Disable!", response.message, response.status);
+                    location.reload();
+                    }
+                    else{
+                    swal.stopLoading();
+                    swal('Oops...', response.message, response.status);
+                    }
+                 })
+                 .fail(function(){
+                    swal('Oops...', 'Something went wrong with ajax !', 'error');
+                 })
+            }
+        })
+    }
+    function setPermission_staff(id,perm) {
+        url ='/Admin/staff_permission.html'
+                 $.ajax({
+                    url: url,
+                    type: 'POST',
+                    headers: {"X-CSRF-TOKEN": $("meta[name='_csrf']").attr("content")},
+                    data: 'user_id=' + id + '&user_permission='+perm,
+                    dataType: 'json'
+                 })
+                 .done(function(response){
+                    if(response.status==="success"){
+                    swal.stopLoading();
+                    swal("User Permission", response.message, response.status);
+                    location.reload();
+                    }
+                    else{
+                    swal.stopLoading();
+                    swal('Oops...', response.message, response.status);
+                    }
+                 })
+                 .fail(function(){
+                    swal('Oops...', 'Something went wrong with ajax !', 'error');
+                 })
+    }
+
+</script>

@@ -71,8 +71,8 @@
 										</div>
 										<div class="mb-3">
 											<label class="form-label">Select Department</label>
-											<select th:each="dl : ${depatment}" class="form-control form-control-lg" th:field="*{department}" placeholder="Select Department">
-												<option th:value="${dl.did}" th:text="${dl.dname}">Department</option>
+											<select class="form-control form-control-lg" th:field="*{department}" placeholder="Select Department">
+												<option th:each="dl : ${depatment}" th:value="${dl.did}" th:text="${dl.dname}">Department</option>
 											</select>
 										</div>
 										<div class="mb-3">

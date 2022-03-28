@@ -1,18 +1,20 @@
 package com.college.lm.Controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import com.college.lm.DataSource.DepartMent;
+import com.college.lm.DataSource.Leave;
 import com.college.lm.DataSource.User;
 import com.college.lm.Repository.DepartMentRepo;
+import com.college.lm.Repository.LeaveRepo;
 import com.college.lm.Repository.UserRepository;
 
-import com.sun.xml.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,8 @@ public class Admin {
     DepartMentRepo drepo;
     @Autowired
     UserRepository UserRepo;
+    @Autowired
+    LeaveRepo leaveRepo;
     @GetMapping("Admin/dashboard.html")
     public String getDashbord(Model model,Authentication auth){
             try{
@@ -101,7 +105,8 @@ public class Admin {
     @PostMapping("Admin/department_update.html")
     public Object updateDepartment(DepartMent departMent,Authentication auth){
         try{
-            drepo.save(departMent);String Login = this.userType(auth);
+            drepo.save(departMent);
+            String Login = this.userType(auth);
             return Login.equals("admin")?"redirect:/Admin/m-department.html":"redirect:/loginSucess";
         }
         catch(Exception e){
@@ -160,12 +165,8 @@ public class Admin {
         try{
             if (id==null) return "redirect:/Admin/m-student";
             else {
-//                 departMent = new DepartMent();
-//                Optional<DepartMent> departMent1 = drepo.findById(id);
-//                departMent.setDname(departMent1.get().getDname());
-//                departMent.setStatus(departMent1.get().getStatus());
-//                departMent.setDid(departMent1.get().getDid());
                 model.addAttribute("pageTitle", "Update Student");
+                model.addAttribute("updateUser",id);
                 model.addAttribute("userDetails",UserRepo.findByEmail(auth.getName()));
             }
             String Login = this.userType(auth);
@@ -178,20 +179,21 @@ public class Admin {
     @PostMapping("Admin/student_update.html")
     public Object updateStudent(@RequestParam Map<String,String> getParam,Authentication auth){
         try{
-            if (!getParam.get("balance").equals("")){
-
+            String Login = this.userType(auth);
+            if (getParam.get("balance").length()>0){
+                this.updateBalance(getParam);
             }
             if (!getParam.get("password").equals("") && getParam.get("password").length()>=6){
                 User user=UserRepo.getById(Long.valueOf(getParam.get("id")));
-                user.setPassword(getParam.get("password"));
+                BCryptPasswordEncoder b=new BCryptPasswordEncoder();
+                user.setPassword(b.encode(getParam.get("password")));
                 UserRepo.save(user);
             }
-            //drepo.save(departMent);
-            String Login = this.userType(auth);
             return Login.equals("admin")?"redirect:/Admin/m-student.html":"redirect:/loginSucess";
         }
         catch(Exception e){
-            return "login.html";
+            e.printStackTrace();
+            return "";
         }
     }
 
@@ -210,6 +212,98 @@ public class Admin {
                 model.addAttribute("slist", st);
             }
             return Login.equals("admin")?"common/index":"redirect:/loginSucess";
+        }
+        catch(Exception e){
+            return "login.html";
+        }
+    }
+    @GetMapping("Admin/staff_update.html")
+    public String getUpdateStaff(@RequestParam(value = "id") Long id, Model model, Authentication auth){
+        try{
+            if (id==null) return "redirect:/Admin/m-staff";
+                model.addAttribute("pageTitle", "Update Staff");
+                model.addAttribute("staffUpdate",UserRepo.getById(id));
+                model.addAttribute("userDetails",UserRepo.findByEmail(auth.getName()));
+                String Login = this.userType(auth);
+                return Login.equals("admin")?"Admin/update_staff":"redirect:/loginSucess";
+        }
+        catch(Exception e){
+            return "login.html";
+        }
+    }
+    @PostMapping("Admin/staff_update.html")
+    public Object updateStaff(@RequestParam Map<String,String> getParam,Authentication auth){
+        try{
+            if (!getParam.get("balance").equals("")){
+                this.updateBalance(getParam);
+            }
+            if (!getParam.get("password").equals("") && getParam.get("password").length()>=6){
+                User user=UserRepo.getById(Long.valueOf(getParam.get("id")));
+                BCryptPasswordEncoder b=new BCryptPasswordEncoder();
+                user.setPassword(b.encode(getParam.get("password")));
+                UserRepo.save(user);
+            }
+            //drepo.save(departMent);
+            String Login = this.userType(auth);
+            return Login.equals("admin")?"redirect:/Admin/m-student.html":"redirect:/loginSucess";
+        }
+        catch(Exception e){
+            return "login.html";
+        }
+    }
+    @PostMapping("Admin/unable_staff.html")
+    @ResponseBody
+    public String unableStaff(@RequestParam Map<String,String> getParam, Authentication auth){
+        try {
+            if (getParam.get("user_id")!=null) {
+                String Login = this.userType(auth);
+                User user=UserRepo.getById(Long.valueOf(getParam.get("user_id")));
+                if (getParam.get("user_status").equals("1")) {
+                    user.setStatus("active");
+                    UserRepo.save(user);
+                    return this.MsgRes(Login,"success","Unable successfully !");
+                }
+                else if(getParam.get("user_status").equals("0")){
+                    user.setStatus(null);
+                    UserRepo.save(user);
+                    return this.MsgRes(Login,"success","Disable successfully !");
+                }
+                else {
+                    return this.MsgRes(Login,"error","Department has some user present !");
+                }
+            }
+            else {
+                return "{\"status\":\"error\",\"message\":\"User not found !\"}";
+            }
+        }
+        catch(Exception e){
+            return "login.html";
+        }
+    }
+    @PostMapping("Admin/staff_permission.html")
+    @ResponseBody
+    public String permissionStaff(@RequestParam Map<String,String> getParam, Authentication auth){
+        try {
+            if (getParam.get("user_id")!=null) {
+                String Login = this.userType(auth);
+                User user=UserRepo.getById(Long.valueOf(getParam.get("user_id")));
+                if (getParam.get("user_permission").equals("1")) {
+                    user.setPermission(true);
+                    UserRepo.save(user);
+                    return this.MsgRes(Login,"success","Give permission successfully !");
+                }
+                else if(getParam.get("user_permission").equals("0")){
+                    user.setPermission(false);
+                    UserRepo.save(user);
+                    return this.MsgRes(Login,"success","Remove permission successfully !");
+                }
+                else {
+                    return this.MsgRes(Login,"error","User has not available !");
+                }
+            }
+            else {
+                return "{\"status\":\"error\",\"message\":\"User not found !\"}";
+            }
         }
         catch(Exception e){
             return "login.html";
@@ -250,6 +344,15 @@ public class Admin {
         return Login.equals("admin") ? "{\"status\":\""+ status +"\",\"message\":\""+ message +"\"}" :
                 "{\"status\":\"error\",\"message\":\"You are different user or not login.. !\"}";
     }
+    private void updateBalance(@RequestParam Map<String,String> getParam){
+        String number=getParam.get("balance");
+        if (number.chars().allMatch(Character::isDigit)) {
+            Leave leave = leaveRepo.findByUserU_Id(Long.valueOf(getParam.get("id")));
+            int balance = leave.getTotal() + Integer.parseInt(getParam.get("balance"));
+            leave.setTotal(balance);
+            leaveRepo.save(leave);
+        }
+    }
     @GetMapping("Admin/test.html")
     @ResponseBody
     public Object Test(Authentication auth){
@@ -264,4 +367,5 @@ public class Admin {
             return "login.html";
         }
     }
+
 }

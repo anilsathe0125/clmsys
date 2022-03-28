@@ -26,6 +26,7 @@ public class AllLeave {
     private String date_from;
     @Column(length=30)
     private String date_to;
+    private String leaveType;
     @Column(length=10)
     private String status;
     @ManyToOne(fetch=FetchType.LAZY,optional = false)
@@ -35,16 +36,19 @@ public class AllLeave {
     private User user;
     @Column(length=20)
     private String appby;
-
+    private String reason;
+    private Long did;
+    private String message;
     public AllLeave() {
     }
 
-    public AllLeave(String date_time, String date_from, String date_to, String status, User user) {
+    public AllLeave(String date_time, String date_from, String date_to, String status, User user, Long did) {
         this.date_time = date_time;
         this.date_from = date_from;
         this.date_to = date_to;
         this.status = status;
         this.user = user;
+        this.did = did;
     }
     
 
@@ -132,4 +136,43 @@ public class AllLeave {
         this.user = user;
     }
 
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public String getAppby() {
+        return appby;
+    }
+
+    public void setAppby(String appby) {
+        this.appby = appby;
+    }
+
+    public String getLeaveType() {
+        return leaveType;
+    }
+
+    public void setLeaveType(String leaveType) {
+        this.leaveType = leaveType;
+    }
+
+    public Long getDid() {
+        return did;
+    }
+
+    public void setDid(Long did) {
+        this.did = did;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

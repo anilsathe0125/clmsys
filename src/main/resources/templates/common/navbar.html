@@ -3,7 +3,6 @@
         <a class="sidebar-brand" href="index.html">
   <span class="align-middle">CLM SYSTEM</span>
 </a>
-
         <ul class="sidebar-nav">
             <li class="sidebar-header">
                 Page
@@ -15,16 +14,36 @@
             </a>
             </li>
             <li class="sidebar-item">
-                <a class="sidebar-link" href="m-staff.html">
+                <a class="sidebar-link" href="m-staff.html" th:if="${userDetails.role}=='admin'">
                     <i class="fa-solid fa-clipboard-user align-middle"></i> <span class="align-middle">Manage Staff</span>
                 </a>
             </li>
-            <li class="sidebar-item">
+            <li class="sidebar-item" th:if="${userDetails.role}=='student'">
+                <a class="sidebar-link" href="m-leave.html">
+                    <i class="fa-solid fa-clipboard-user align-middle"></i> <span class="align-middle">Apply Leave</span>
+                </a>
+            </li>
+            <li class="sidebar-item" th:if="${userDetails.role}=='staff'">
+                <a class="sidebar-link" href="m-leave.html">
+                    <i class="fa-solid fa-clipboard-user align-middle"></i> <span class="align-middle">Apply Leave</span>
+                </a>
+            </li>
+            <li class="sidebar-item" th:if="${userDetails.role}=='staff'">
+                <a class="sidebar-link" href="m-approve.html">
+                    <i class="fa-solid fa-clipboard-user align-middle"></i> <span class="align-middle">Approve Leave</span>
+                </a>
+            </li>
+            <li class="sidebar-item" th:if="${userDetails.role}=='hod'">
+                <a class="sidebar-link" href="m-approve.html">
+                    <i class="fa-solid fa-clipboard-user align-middle"></i> <span class="align-middle">Approve Leave</span>
+                </a>
+            </li>
+            <li class="sidebar-item" th:if="${userDetails.role}=='admin'">
                 <a class="sidebar-link" href="m-student.html">
                     <i class="fa-solid fa-user-graduate"></i> <span class="align-middle">Student Manage</span>
                 </a>
             </li>
-            <li class="sidebar-item">
+            <li class="sidebar-item" th:if="${userDetails.role}=='admin'">
                 <a class="sidebar-link" href="m-department.html">
                     <i class="fa-regular fa-building"></i> <span class="align-middle">Manage Department</span>
                 </a>

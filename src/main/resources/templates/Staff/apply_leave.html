@@ -1,0 +1,40 @@
+<h1 class="h3 mb-3"><strong th:text="${pageTitle}">Page Title</strong> </h1>
+<form method="post" th:action="@{/Staff/apply_leave.html}">
+
+    <input  name="id" type="text" hidden/>
+    <div class="mb-3 row">
+        <div class="col-4">
+            <label class="radio inline">Half Day
+            <input type="radio" name="ltype" value="1"/>
+            </label>
+        </div>
+        <div class="col-4">
+            <label class="radio inline">Fullday
+            <input type="radio" name="ltype" value="2"/>
+            </label>
+        </div>
+        <div class="col-4">
+            <label class="radio inline">Multiple Day
+            <input type="radio" name="ltype" value="3"/>
+            </label>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">From DateTime dd/mm/yyyy hh:mm</label>
+        <input type="datetime" name="fdate" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">To DateTime dd/mm/yyyy hh:mm</label>
+        <input type="datetime" name="todate" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Reason</label>
+        <input type="datetime" name="reason" class="form-control" />
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-9 m-t-15">
+            <button type="submit" class="btn btn-sm btn-success waves-effect"> <span class="btn-label"><i class="fa-solid fa-check"></i></span>APPLY</button>
+            <button type="" class="btn btn-sm btn-white m-l-5 waves-effect" data-dismiss="modal">CANCEL</button>
+        </div>
+    </div>
+</form>

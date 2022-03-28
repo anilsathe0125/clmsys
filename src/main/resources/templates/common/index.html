@@ -12,7 +12,6 @@
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
 
     <title>College Leave Management Dashboard</title>
-
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/appmain.css" rel="stylesheet">
     <link href="/css/custom.css" rel="stylesheet">
@@ -79,7 +78,7 @@
         });
     });
 </script>
-<script type="text/javascript">
+<script type="text/javascript" th:if="${userDetails.role}=='admin'">
     function delete_row(table_name, row_id) {
         url ='/Admin/delete_record'
         swal({
@@ -118,6 +117,7 @@
         })
     }
 </script>
+
 <script type='text/javascript' src="/js/app.js"></script>
 <script type='text/javascript' src="/js/bootstrap.js"></script>
 <script type='text/javascript' src="/js/sweetalert.min.js"></script>
