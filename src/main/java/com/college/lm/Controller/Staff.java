@@ -209,9 +209,33 @@ public class Staff {
             model.addAttribute("pageName","Staff/approve_leave");
             model.addAttribute("pageTitle", "Approve Leave");
             model.addAttribute("al",allleave);
+            model.addAttribute("id",getParam.get("id"));
             model.addAttribute("userDetails",user);
             String Login = this.userType(auth);
             return this.userPermission(Login)?"Staff/approve_leave":"redirect:/loginSucess";
+        }
+        catch(Exception e){
+            return "login.html";
+        }
+    }
+    @PostMapping("Staff/leave_approve.html")
+    public Object AsetleaveStdent(@RequestParam Map<String,String> getParam,Model model,Authentication auth){
+        try{
+            User user=userRepo.findByEmail(auth.getName());
+            AllLeave allLeave=allLeaveRepo.getById(Long.valueOf(getParam.get("id")));
+            allLeave.setAppby(user.getFirst_name()+' '+user.getLast_name());
+            switch (getParam.get("status")){
+                case "1":
+                    allLeave.setStatus("reject");
+                    break;
+                case "2":
+                    allLeave.setStatus("approve");
+                    break;
+            }
+            allLeave.setMessage(getParam.get("message"));
+            allLeaveRepo.save(allLeave);
+            String Login = this.userType(auth);
+            return this.userPermission(Login)?"redirect:/Staff/approve_leave.html":"redirect:/loginSucess";
         }
         catch(Exception e){
             return "login.html";
