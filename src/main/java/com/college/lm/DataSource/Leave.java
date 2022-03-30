@@ -16,11 +16,11 @@ public class Leave {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long lid;
     @Column(length=5)
-    private Integer total;
+    private float total;
     @Column(length=5)
-    private Integer getLeave;
+    private float getLeave;
     @Column(length=5)
-    private Integer balLeave;
+    private float balLeave;
     @OneToOne
     @JoinColumn(name="uid")
     private User user;
@@ -44,42 +44,42 @@ public class Leave {
     /**
      * @return Integer return the total
      */
-    public Integer getTotal() {
+    public float getTotal() {
         return total;
     }
 
     /**
      * @param total the total to set
      */
-    public void setTotal(Integer total) {
+    public void setTotal(float total) {
         this.total = total;
     }
 
     /**
      * @return Integer return the getLeave
      */
-    public Integer getGetLeave() {
+    public float getGetLeave() {
         return getLeave;
     }
 
     /**
      * @param getLeave the getLeave to set
      */
-    public void setGetLeave(Integer getLeave) {
+    public void setGetLeave(float getLeave) {
         this.getLeave = getLeave;
     }
 
     /**
      * @return Integer return the balLeave
      */
-    public Integer getBalLeave() {
+    public float getBalLeave() {
         return balLeave;
     }
 
     /**
      * @param balLeave the balLeave to set
      */
-    public void setBalLeave(Integer balLeave) {
+    public void setBalLeave(float balLeave) {
         this.balLeave = balLeave;
     }
 

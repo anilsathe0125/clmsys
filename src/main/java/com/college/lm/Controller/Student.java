@@ -17,8 +17,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 public class Student {
@@ -96,27 +101,39 @@ public class Student {
                 allLeave.setUser(user);
                 allLeave.setDid(user.getDepartment().getDid());
                 allLeave.setReason(getParam.get("reason"));
+                Leave leave = leaveRepo.findByUserU_Id(user.getU_id());
+                if (leave.getGetLeave()==0.0) leave.setGetLeave(0);
+                if (leave.getBalLeave()==0.0) leave.setBalLeave(0);
+                float balance=leave.getGetLeave(),fb=leave.getBalLeave();
                 switch (getParam.get("ltype")){
                     case "1":
                         allLeave.setLeaveType("halfday");
+                        balance = (float) (leave.getGetLeave() + 0.5);
+                        fb= (float) (leave.getTotal()-(leave.getGetLeave()+0.5));
                         break;
                     case "2":
                         allLeave.setLeaveType("fullday");
+                        balance = leave.getGetLeave() + 1;
+                        fb=leave.getTotal()-(leave.getGetLeave()+1);
                         break;
                     case "3":
                         allLeave.setLeaveType("multiday");
+                        balance = leave.getGetLeave() + this.calDay(allLeave.getDate_from(),
+                                allLeave.getDate_to());
+                        fb=leave.getTotal()-(leave.getGetLeave()+this.calDay(allLeave.getDate_from(),
+                                allLeave.getDate_to()));
                         break;
                 }
                 if (this.getLeaveBalance(auth)) {
-                    allLeaveRepo.save(allLeave);
-                    Leave leave = leaveRepo.findByUserU_Id(user.getU_id());
-                    if (leave.getGetLeave()==null) leave.setGetLeave(0);
-                    int balance = leave.getGetLeave() + 1;
-                    if (leave.getBalLeave()==null) leave.setBalLeave(0);
-                    int fb=leave.getTotal()-(leave.getGetLeave()+1);
                     leave.setGetLeave(balance);
                     leave.setBalLeave(fb);
-                    leaveRepo.save(leave);
+                    if (leave.getBalLeave()>=0.0) {
+                        allLeaveRepo.save(allLeave);
+                        leaveRepo.save(leave);
+                    }
+                    else {
+                        return Login.equals("student")?"redirect:/Student/m-leave.html?error=Leave Balance Not Efficient":"redirect:/loginSucess";
+                    }
                 }
 
             }
@@ -183,15 +200,20 @@ public class Student {
     private boolean getLeaveBalance(Authentication auth){
         User user=userRepo.findByEmail(auth.getName());
         Leave leave=leaveRepo.findByUserU_Id(user.getU_id());
-        if (leave.getGetLeave()==null) leave.setGetLeave(0);
-        int blance=leave.getTotal()-leave.getGetLeave();
+        if (leave.getGetLeave()==0.0) leave.setGetLeave(0);
+        float blance=leave.getTotal()-leave.getGetLeave();
         return (blance>0)?true : false;
+    }
+    private Float calDay(String d1,String d2){
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        LocalDate da1 = LocalDate.parse(d1, formatter);
+        LocalDate da2 = LocalDate.parse(d2, formatter);
+        float days=ChronoUnit.DAYS.between(da1,da2);
+        return (days!=0)?days:1.0F;
     }
     @GetMapping("Student/test.html")
     @ResponseBody
     public Object testResponse(Authentication auth){
-        User user=userRepo.findByEmail(auth.getName());
-        List <AllLeave> allleave=allLeaveRepo.findByUser(user.getU_id());
-        return allleave;
+        return this.calDay("13/03/2022 12:00","13/03/2022 05:30");
     }
 }

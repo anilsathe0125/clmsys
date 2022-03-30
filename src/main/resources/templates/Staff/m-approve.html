@@ -32,6 +32,9 @@
                                 <td class="d-none d-xl-table-cell" th:if="${aleave.status=='cancel'}"> <span class="badge bg-secondary">CANCEL</span></td>
                                 <td class="d-none d-xl-table-cell">
                                     <button th:if="${aleave.status=='pending'}" data-toggle="modal" data-target="#mymodal" th:attr="data-id=@{/Staff/leave_approve.html(id=${aleave.l_id})}" id="menu" class="btn btn-sm btn-warning waves-effect waves-light"><span class="btn-label">
+                                        <i class="fa-solid fa-thumbs-up"></i></span>
+                                        Approve
+                                    </button>
                                     <button th:if="${aleave.status=='approve'}" class="btn btn-sm btn-warning waves-effect waves-light" disabled><span class="btn-label">
                                         <i class="fa-solid fa-thumbs-up"></i></span>
                                         Approve

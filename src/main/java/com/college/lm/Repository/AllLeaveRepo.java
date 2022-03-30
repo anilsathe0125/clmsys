@@ -16,6 +16,6 @@ public interface AllLeaveRepo extends JpaRepository<AllLeave, Long> {
     List<AllLeave> findByPending(Long id,String status);
     @Query(value = "SELECT * FROM all_leaves WHERE did=?1 ORDER BY l_id DESC", nativeQuery = true)
     List<AllLeave> findByDepartment(Long id);
-    @Query(value = "SELECT * FROM all_leaves INNER JOIN users ON all_leaves.u_id=users.u_id WHERE users.role='student' and all_leaves.did=?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM all_leaves INNER JOIN users ON all_leaves.u_id=users.u_id WHERE users.role='student' and all_leaves.did=?1 and all_leaves.status='pending'", nativeQuery = true)
     List<AllLeave> findByStudentPendingLeave(Long did);
 }

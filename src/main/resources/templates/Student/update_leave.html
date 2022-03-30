@@ -5,17 +5,17 @@
     <div class="mb-3 row">
         <div class="col-4">
             <label class="radio inline">Half Day
-            <input type="radio" name="ltype" value="1" th:checked="${updateLeave.leaveType}=='halfday'"/>
+            <input type="radio" name="ltype" value="1" th:checked="${updateLeave.leaveType}=='halfday'" disabled/>
             </label>
         </div>
         <div class="col-4">
             <label class="radio inline">Fullday
-            <input type="radio" name="ltype" value="2" th:checked="${updateLeave.leaveType}=='fullday'"/>
+            <input type="radio" name="ltype" value="2" th:checked="${updateLeave.leaveType}=='fullday'" disabled/>
             </label>
         </div>
         <div class="col-4">
             <label class="radio inline">Multiple Day
-            <input type="radio" name="ltype" value="3" th:checked="${updateLeave.leaveType}=='multiday'"/>
+            <input type="radio" name="ltype" value="3" th:checked="${updateLeave.leaveType}=='multiday'" disabled/>
             </label>
         </div>
     </div>

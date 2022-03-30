@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 @Controller
@@ -31,27 +34,29 @@ public class Staff {
 
     @GetMapping("Staff/dashboard.html")
     public String getHome(Model model, Authentication auth){
-        try{
+            try {
             String Login=this.userType(auth);
-            if(this.userPermission(Login)){
-                User user=userRepo.findByEmail(auth.getName());
-                Leave leave=leaveRepo.findByUserU_Id(user.getU_id());
-                model.addAttribute("pageName","Staff/dashboard");
+            if(this.userPermission(Login)) {
+                User user = userRepo.findByEmail(auth.getName());
+                Leave leave = leaveRepo.findByUserU_Id(user.getU_id());
+                model.addAttribute("pageName", "Staff/dashboard");
                 model.addAttribute("pageTitle", "Staff Dashboard");
-                model.addAttribute("totalLeave",leave);
-                if(Login.equals("staff")) {
+                model.addAttribute("totalLeave", leave);
+                if (Login.equals("staff")) {
                     model.addAttribute("pendingLeave", allLeaveRepo.findByPending(user.getU_id(), "pending").size());
                     model.addAttribute("approveLeave", allLeaveRepo.findByPending(user.getU_id(), "approve").size());
-                    model.addAttribute("studentPending",allLeaveRepo.findByStudentPendingLeave(user.getDepartment().getDid()).size());
+                    model.addAttribute("studentPending", allLeaveRepo.findByStudentPendingLeave(user.getDepartment().getDid()).size());
                 }
-                model.addAttribute("listLeave",allLeaveRepo.findByPending(user.getU_id(),"pending"));
-                model.addAttribute("userDetails",user);
+                model.addAttribute("listLeave", allLeaveRepo.findByPending(user.getU_id(), "pending"));
+                model.addAttribute("userDetails", user);
+                return this.userPermission(Login)?"common/index":"redirect:/loginSucess";
             }
-            return Login.equals("staff")?"common/index":"redirect:/loginSucess";
-        }
-        catch(Exception e){
-            return "login.html";
-        }
+            }
+            catch (Exception e)
+            {
+                return "redirect:/login.html";
+            }
+        return "";
     }
     //---------------------
     @GetMapping("Staff/m-leave.html")
@@ -86,7 +91,7 @@ public class Staff {
         }
     }
     @PostMapping("Staff/apply_leave.html")
-    public String setApplyleave(@RequestParam Map<String,String> getParam, Model model, Authentication auth){
+    public String setApplyleave(@RequestParam Map<String,String> getParam, Authentication auth){
         try{
             String Login=this.userType(auth);
             if(Login.equals("staff")){
@@ -113,10 +118,10 @@ public class Staff {
                 if (this.getLeaveBalance(auth)) {
                     allLeaveRepo.save(allLeave);
                     Leave leave = leaveRepo.findByUserU_Id(user.getU_id());
-                    if (leave.getGetLeave()==null) leave.setGetLeave(0);
-                    int balance = leave.getGetLeave() + 1;
-                    if (leave.getBalLeave()==null) leave.setBalLeave(0);
-                    int fb=leave.getTotal()-(leave.getGetLeave()+1);
+                    if (leave.getGetLeave()==0.0) leave.setGetLeave(0);
+                    float balance = leave.getGetLeave() + 1;
+                    if (leave.getBalLeave()==0.0) leave.setBalLeave(0);
+                    float fb=leave.getTotal()-(leave.getGetLeave()+1);
                     leave.setGetLeave(balance);
                     leave.setBalLeave(fb);
                     leaveRepo.save(leave);
@@ -227,6 +232,27 @@ public class Staff {
             switch (getParam.get("status")){
                 case "1":
                     allLeave.setStatus("reject");
+                    Leave leave= leaveRepo.findByUserU_Id(allLeave.getUser().getU_id());
+                    float nb=0.0F;
+                    float ngl= 0.0F;
+                    float b=leave.getBalLeave();
+                    float gl=leave.getGetLeave();
+                    if (allLeave.getLeaveType().equals("halfday")){
+                        nb= (float) (b+0.5);
+                        ngl=  (float) (gl-0.5);
+                    }
+                    if (allLeave.getLeaveType().equals("fullday"))
+                    {
+                        nb= (float) (b+1.0);
+                        ngl=  (float) (gl-1.0);
+                    }
+                    if (allLeave.getLeaveType().equals("multiday")){
+                        nb= (float) (b+this.calDay(allLeave.getDate_from(),allLeave.getDate_to()));
+                        ngl=  (float) (gl-this.calDay(allLeave.getDate_from(),allLeave.getDate_to()));
+                    }
+                    leave.setBalLeave(nb);
+                    leave.setGetLeave(ngl);
+                    leaveRepo.save(leave);
                     break;
                 case "2":
                     allLeave.setStatus("approve");
@@ -235,7 +261,7 @@ public class Staff {
             allLeave.setMessage(getParam.get("message"));
             allLeaveRepo.save(allLeave);
             String Login = this.userType(auth);
-            return this.userPermission(Login)?"redirect:/Staff/approve_leave.html":"redirect:/loginSucess";
+            return this.userPermission(Login)?"redirect:/Staff/m-approve.html":"redirect:/loginSucess";
         }
         catch(Exception e){
             return "login.html";
@@ -253,18 +279,23 @@ public class Staff {
     private boolean getLeaveBalance(Authentication auth){
         User user=userRepo.findByEmail(auth.getName());
         Leave leave=leaveRepo.findByUserU_Id(user.getU_id());
-        if (leave.getGetLeave()==null) leave.setGetLeave(0);
-        int blance=leave.getTotal()-leave.getGetLeave();
+        if (leave.getGetLeave()==0.0) leave.setGetLeave(0);
+        float blance=leave.getTotal()-leave.getGetLeave();
         return (blance>0)?true : false;
     }
+    private Float calDay(String d1,String d2){
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        LocalDate da1 = LocalDate.parse(d1, formatter);
+        LocalDate da2 = LocalDate.parse(d2, formatter);
+        return Float.valueOf(ChronoUnit.DAYS.between(da1,da2));
+    }
     private boolean userPermission(String Login){
-        return (Login.equals("staff") || Login.equals("hod"))?true:false;
+        return (Login.equals("staff")||Login.equals("hod"))?true:false;
     }
     @GetMapping("Staff/test.html")
     @ResponseBody
     public Object testResponse(Authentication auth){
-        User user=userRepo.findByEmail(auth.getName());
-        List<AllLeave> allleave= allLeaveRepo.findByStudentPendingLeave(user.getDepartment().getDid());
-        return allleave.size();
+        String a ="staff";
+        return (a.equals("staff")||a.equals("hod"))?true:false;
     }
 }

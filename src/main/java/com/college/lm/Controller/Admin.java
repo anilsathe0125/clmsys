@@ -205,11 +205,13 @@ public class Admin {
         try{
             String Login=this.userType(auth);
             if(Login.equals("admin")){
+                List<User> hod=UserRepo.findByRole("hod");
                 List<User> st=UserRepo.findByRole("staff");
+                hod.addAll(st);
                 model.addAttribute("pageName","Admin/m-staff");
                 model.addAttribute("pageTitle", "Manage Staff");
                 model.addAttribute("userDetails",UserRepo.findByEmail(auth.getName()));
-                model.addAttribute("slist", st);
+                model.addAttribute("slist",hod);
             }
             return Login.equals("admin")?"common/index":"redirect:/loginSucess";
         }
@@ -234,18 +236,20 @@ public class Admin {
     @PostMapping("Admin/staff_update.html")
     public Object updateStaff(@RequestParam Map<String,String> getParam,Authentication auth){
         try{
+            User user=UserRepo.getById(Long.valueOf(getParam.get("id")));
             if (!getParam.get("balance").equals("")){
                 this.updateBalance(getParam);
             }
+            if (!getParam.get("role").equals("")){
+                user.setRole(getParam.get("role"));
+            }
             if (!getParam.get("password").equals("") && getParam.get("password").length()>=6){
-                User user=UserRepo.getById(Long.valueOf(getParam.get("id")));
                 BCryptPasswordEncoder b=new BCryptPasswordEncoder();
                 user.setPassword(b.encode(getParam.get("password")));
-                UserRepo.save(user);
             }
-            //drepo.save(departMent);
+            UserRepo.save(user);
             String Login = this.userType(auth);
-            return Login.equals("admin")?"redirect:/Admin/m-student.html":"redirect:/loginSucess";
+            return Login.equals("admin")?"redirect:/Admin/m-staff.html":"redirect:/loginSucess";
         }
         catch(Exception e){
             return "login.html";
@@ -348,7 +352,7 @@ public class Admin {
         String number=getParam.get("balance");
         if (number.chars().allMatch(Character::isDigit)) {
             Leave leave = leaveRepo.findByUserU_Id(Long.valueOf(getParam.get("id")));
-            int balance = leave.getTotal() + Integer.parseInt(getParam.get("balance"));
+            float balance = leave.getTotal() + Integer.parseInt(getParam.get("balance"));
             leave.setTotal(balance);
             leaveRepo.save(leave);
         }

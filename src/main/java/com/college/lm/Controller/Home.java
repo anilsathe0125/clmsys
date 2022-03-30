@@ -49,6 +49,8 @@ public class Home  {
         user.setPassword(ecode.encode(user.getPassword()));
         Leave leave=new Leave();
         leave.setTotal(6);
+        leave.setGetLeave(0);
+        leave.setBalLeave(0);
             try {
             if (user.getPassword().length()<=6)
                 throw new CustomExceotion("Password not less 6 than");

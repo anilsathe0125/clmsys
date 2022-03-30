@@ -25,8 +25,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="dl : ${dlist}">
-                                <td th:text="${dl.did}">ID</td>
+                            <tr th:each="dl,itor : ${dlist}">
+                                <td th:text="${itor.count}">ID</td>
                                 <td class="d-none d-xl-table-cell" th:text="${dl.dname}">NAME</td>
                                 <td class="d-none d-xl-table-cell" th:if="${dl.status==true}"><span class="badge bg-success">UNABLE</span></td>
                                 <td class="d-none d-xl-table-cell" th:if="${dl.status==false}"> <span class="badge bg-danger">DISABLE</span></td>

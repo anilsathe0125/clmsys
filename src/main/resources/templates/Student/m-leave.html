@@ -13,6 +13,7 @@
                             <button data-toggle="modal" data-target="#mymodal" data-id="/Student/apply_leave.html" id="menu" class="btn btn-sm btn-primary waves-effect waves-light"><span class="btn-label"><i class="fa fa-plus"></i></span>Apply Leave</button>
                             <!--                            <a th:href="@{/Admin/department_add.html}"><button class="btn btn-sm btn-primary waves-effect waves-light"><span class="btn-label"><i class="fa fa-plus"></i></span>ADD DEPARTMENT</button></a>-->
                         </div>
+                        <div class="error text-center bg-danger" th:if="${param.error}!=null" th:text="${param.error[0]}">error</div>
                         <table class="table table-hover my-0">
                             <thead>
                             <tr>
@@ -34,7 +35,7 @@
                                 <td class="d-none d-xl-table-cell" th:text="${#strings.abbreviate(aleave.reason,20)}">reason</td>
                                 <td class="d-none d-xl-table-cell" th:if="${aleave.status=='approve'}"><span class="badge bg-success">APPROVE</span></td>
                                 <td class="d-none d-xl-table-cell" th:if="${aleave.status=='pending'}"> <span class="badge bg-danger">PENDING</span></td>
-                                <td class="d-none d-xl-table-cell" th:if="${aleave.status=='cancel'}"> <span class="badge bg-secondary">CANCEL</span></td>
+                                <td class="d-none d-xl-table-cell" th:if="${aleave.status=='reject'}"> <span class="badge bg-secondary">CANCEL</span></td>
                                 <td class="d-none d-xl-table-cell">
                                     <button data-toggle="modal" data-target="#mymodal" th:attr="data-id=@{/Student/leave_update.html(id=${aleave.l_id})}" id="menu" class="btn btn-sm btn-warning waves-effect waves-light"><span class="btn-label">
                                     <i class="fa-solid fa-pen-to-square"></i></span>

@@ -116,6 +116,12 @@
             }
         })
     }
+    $(document).ready(function(){
+        let sel = $('.sidebar-item');
+        sel.click = function(evt) {
+        evt.classList.toggle('{active}');
+    }
+    });
 </script>
 
 <script type='text/javascript' src="/js/app.js"></script>

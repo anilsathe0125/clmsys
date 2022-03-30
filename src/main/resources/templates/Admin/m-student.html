@@ -19,7 +19,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="stlist,iterator : ${slist}">
-                <td th:text="${iterator.index}">number</td>
+                <td th:text="${iterator.count}">number</td>
                 <td>
                     <button data-toggle="modal" data-target="#mymodal" th:attr="data-id=@{/Admin/student_update.html(id=${stlist.u_id})}" id="menu" class="btn btn-sm btn-warning waves-effect waves-light"><span class="btn-label">
                                     <i class="fa-solid fa-pen-to-square"></i></span>
