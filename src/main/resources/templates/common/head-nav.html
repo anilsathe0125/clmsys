@@ -13,10 +13,10 @@
                 <img class="avatar img-fluid rounded me-1" th:attr="src=|https://ui-avatars.com/api/?name=${userDetails.first_name}&background=0D8ABC&color=fff|" th:alt="${userDetails.first_name}"/> <span class="text-dark" th:text="${userDetails.first_name}">Charles Hall</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">
-                    <a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
+                    <a class="dropdown-item" href="profile.html" th:if="${userDetails.role!='admin'}"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="index.html"><i class="align-middle me-1" data-feather="settings"></i> Settings </a>
-                    <div class="dropdown-divider"></div>
+                    <a th:if="${userDetails.role!='admin'}" class="dropdown-item" data-toggle="modal" data-target="#mymodal" data-id="get_password.html" id="menu" href="#"><i class="align-middle me-1" data-feather="settings"></i> Settings </a>
+                    <div class="dropdown-divider" th:if="${userDetails.role!='admin'}"></div>
                     <a class="dropdown-item" href="/logout.html">Logout</a>
                 </div>
             </li>

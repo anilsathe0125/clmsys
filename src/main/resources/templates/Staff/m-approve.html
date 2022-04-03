@@ -12,6 +12,7 @@
                             <thead>
                             <tr>
                                 <th># ID</th>
+                                <th class="d-none d-xl-table-cell"> NAME</th>
                                 <th class="d-none d-xl-table-cell">FROM DATE</th>
                                 <th class="d-none d-xl-table-cell">TO DATE</th>
                                 <th class="d-none d-xl-table-cell">Leave Type</th>
@@ -23,19 +24,20 @@
                             <tbody>
                             <tr th:each="aleave,itor : ${aleave}">
                                 <td th:text="${itor.count}">ID</td>
-                                <td class="d-none d-xl-table-cell" th:text="${aleave.date_from}">date_from</td>
-                                <td class="d-none d-xl-table-cell" th:text="${aleave.date_to}">date_to</td>
-                                <td class="d-none d-xl-table-cell" th:text="${aleave.leaveType}">leave_type</td>
-                                <td class="d-none d-xl-table-cell" th:text="${#strings.abbreviate(aleave.reason,20)}">reason</td>
-                                <td class="d-none d-xl-table-cell" th:if="${aleave.status=='approve'}"><span class="badge bg-success">APPROVE</span></td>
-                                <td class="d-none d-xl-table-cell" th:if="${aleave.status=='pending'}"> <span class="badge bg-danger">PENDING</span></td>
-                                <td class="d-none d-xl-table-cell" th:if="${aleave.status=='cancel'}"> <span class="badge bg-secondary">CANCEL</span></td>
+                                <td class="d-none d-xl-table-cell" th:text="${aleave[10]+' '+aleave[11]}">full name</td>
+                                <td class="d-none d-xl-table-cell" th:text="${aleave[1]}">date_from</td>
+                                <td class="d-none d-xl-table-cell" th:text="${aleave[2]}">date_to</td>
+                                <td class="d-none d-xl-table-cell" th:text="${aleave[7]}">leave_type</td>
+                                <td class="d-none d-xl-table-cell" th:text="${#strings.abbreviate(aleave[6],20)}">reason</td>
+                                <td class="d-none d-xl-table-cell" th:if="${aleave[4]=='approve'}"><span class="badge bg-success">APPROVE</span></td>
+                                <td class="d-none d-xl-table-cell" th:if="${aleave[4]=='pending'}"> <span class="badge bg-danger">PENDING</span></td>
+                                <td class="d-none d-xl-table-cell" th:if="${aleave[4]=='cancel'}"> <span class="badge bg-secondary">CANCEL</span></td>
                                 <td class="d-none d-xl-table-cell">
-                                    <button th:if="${aleave.status=='pending'}" data-toggle="modal" data-target="#mymodal" th:attr="data-id=@{/Staff/leave_approve.html(id=${aleave.l_id})}" id="menu" class="btn btn-sm btn-warning waves-effect waves-light"><span class="btn-label">
+                                    <button th:if="${aleave[4]=='pending'}" data-toggle="modal" data-target="#mymodal" th:attr="data-id=@{/Staff/leave_approve.html(id=${aleave[0]})}" id="menu" class="btn btn-sm btn-warning waves-effect waves-light"><span class="btn-label">
                                         <i class="fa-solid fa-thumbs-up"></i></span>
                                         Approve
                                     </button>
-                                    <button th:if="${aleave.status=='approve'}" class="btn btn-sm btn-warning waves-effect waves-light" disabled><span class="btn-label">
+                                    <button th:if="${aleave[4]=='approve'}" class="btn btn-sm btn-warning waves-effect waves-light" disabled><span class="btn-label">
                                         <i class="fa-solid fa-thumbs-up"></i></span>
                                         Approve
                                     </button>
@@ -50,9 +52,17 @@
         </div>
 
 </main>
-<script type="text/javascript">
+<script type="text/javascript" th:if="${userDetails.role}=='staff'">
     $(document).ready(function(){
-            $(".sidebar-item").removeClass(".active");
-            $(".sidebar-item").children(1).addClass(".active");
+        let sel = $('.sidebar-item');
+        sel.removeClass("active");
+        $('.sidebar-nav li:nth-child(5)').addClass("active");
+    });
+</script>
+<script type="text/javascript" th:if="${userDetails.role}=='hod'">
+    $(document).ready(function(){
+        let sel = $('.sidebar-item');
+        sel.removeClass("active");
+        $('.sidebar-nav li:nth-child(3)').addClass("active");
     });
 </script>

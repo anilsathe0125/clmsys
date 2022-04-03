@@ -1,0 +1,40 @@
+<main class="content">
+    <div class="container-fluid p-6 bg-white">
+<h1 class="h3 mb-3"><strong th:text="${pageTitle}">Page Title</strong> </h1>
+<form method="post" th:action="@{profile_update.html}">
+
+    <input th:value="${userDetails.u_id}" name="id" type="text" hidden/>
+    <div class="mb-3">
+        <label class="form-label">Full Name</label>
+        <input type="text" th:value="${userDetails.first_name+' '+userDetails.last_name}" name="fname" class="form-control" readonly/>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Gender</label>
+        <select class="form-control" name="gender">
+            <option value="male" th:selected="${userDetails.user_gender=='male'}">MALE</option>
+            <option value="female" th:selected="${userDetails.user_gender=='female'}">FEMALE</option>
+            <option value="other" th:selected="${userDetails.user_gender=='female'}">OTHER</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Class</label>
+        <input type="class" th:value="${userDetails.department.dname}" name="class" class="form-control" readonly/>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Email ID</label>
+        <input type="text" th:value="${userDetails.email}" name="email" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Mobile No</label>
+        <input type="mobile_no" th:value="${userDetails.mobile_no}" name="mobile_no" class="form-control" />
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-9 m-t-15">
+            <button type="submit" class="btn btn-sm btn-success waves-effect"> <span class="btn-label"><i class="fa-solid fa-pen-to-square"></i> </span>UPDATE</button>
+            <span th:if="${userDetails.role=='student'}"><a href="/Student/dashboard.html" class="btn btn-sm btn-white m-l-5 waves-effect">DASHBOARD</a></span>
+            <span th:if="${userDetails.role=='staff'}"><a href="/Staff/dashboard.html" class="btn btn-sm btn-white m-l-5 waves-effect">DASHBOARD</a></span>
+        </div>
+    </div>
+</form>
+</div>
+</main>

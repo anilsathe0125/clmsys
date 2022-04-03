@@ -93,7 +93,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <h1 class="mt-1 mb-3" >Total_Staff</h1>
+                                    <h1 class="mt-1 mb-3" th:text="${totStaff}">Total_Staff</h1>
                                 </div>
                             </div>
 
@@ -112,7 +112,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <h1 class="ml-10 mt--9 mb-0" >Total_Student</h1>
+                                    <h1 class="ml-10 mt--9 mb-0" th:text="${totStudent}">Total_Student</h1>
                                 </div>
                             </div>
                         </div>
@@ -132,7 +132,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <h1 class="mt-1 mb-3" >Pending_Leave</h1>
+                                    <h1 class="mt-1 mb-3" th:text="${staffPending}">Pending_Leave</h1>
                                 </div>
                             </div>
 
@@ -175,3 +175,10 @@
 
     </div>
 </main>
+<script type="text/javascript" th:if="${userDetails.role}=='staff'">
+    $(document).ready(function(){
+        let sel = $('.sidebar-item');
+        sel.removeClass("active");
+        $('.sidebar-nav li:nth-child(2)').addClass("active");
+    });
+</script>

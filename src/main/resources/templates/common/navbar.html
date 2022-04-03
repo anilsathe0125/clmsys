@@ -3,7 +3,7 @@
         <a class="sidebar-brand" href="index.html">
   <span class="align-middle">CLM SYSTEM</span>
 </a>
-        <ul class="sidebar-nav" onclick="navbarFun(event)">
+        <ul class="sidebar-nav">
             <li class="sidebar-header">
                 Page
             </li>
@@ -50,9 +50,11 @@
             </li>
         </ul>
 
-        <div class="sidebar-cta">
+        <div class="sidebar-cta text-center">
             <div class="sidebar-cta-content">
-
+                <h2 class="fs-12" th:if="${userDetails.role}=='admin'"> ADMIN </h2>
+                <h2 class="fs-12" th:if="${userDetails.role}=='staff'"> STAFF </h2>
+                <h2 class="fs-12" th:if="${userDetails.role}=='student'"> STUDENT </h2>
             </div>
         </div>
     </div>

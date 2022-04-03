@@ -9,6 +9,7 @@ import com.college.lm.Repository.LeaveRepo;
 import com.college.lm.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +46,12 @@ public class Staff {
                 if (Login.equals("staff")) {
                     model.addAttribute("pendingLeave", allLeaveRepo.findByPending(user.getU_id(), "pending").size());
                     model.addAttribute("approveLeave", allLeaveRepo.findByPending(user.getU_id(), "approve").size());
-                    model.addAttribute("studentPending", allLeaveRepo.findByStudentPendingLeave(user.getDepartment().getDid()).size());
+                    model.addAttribute("studentPending", allLeaveRepo.studentPendingLeaveCount(user.getDepartment().getDid()).size());
+                }
+                else {
+                    model.addAttribute("totStudent",userRepo.findByType(user.getDepartment().getDid(),"student").size());
+                    model.addAttribute("totStaff", userRepo.findByType(user.getDepartment().getDid(),"staff").size());
+                    model.addAttribute("staffPending", allLeaveRepo.findByStaffPendingLeave(user.getDepartment().getDid()).size());
                 }
                 model.addAttribute("listLeave", allLeaveRepo.findByPending(user.getU_id(), "pending"));
                 model.addAttribute("userDetails", user);
@@ -65,6 +71,7 @@ public class Staff {
             User user=userRepo.findByEmail(auth.getName());
             List <AllLeave> allleave=allLeaveRepo.findByUser(user.getU_id());
             model.addAttribute("pageName","Staff/m-leave");
+            model.addAttribute("responsible",userRepo.findByHod(user.getDepartment().getDid()));
             model.addAttribute("pageTitle", "Manage Leave");
             model.addAttribute("al",allleave);
             model.addAttribute("userDetails",user);
@@ -190,7 +197,12 @@ public class Staff {
             model.addAttribute("userDetails",userRepo.findByEmail(auth.getName()));
             if(Login.equals("staff") && user.getStatus().equals("active")
             && user.isPermission()){
-                List<AllLeave> allLeaves=allLeaveRepo.findByStudentPendingLeave(user.getDepartment().getDid());
+                List<Object> allLeaves=allLeaveRepo.findByStudentPendingLeave(user.getDepartment().getDid());
+                model.addAttribute("aleave",allLeaves);
+                model.addAttribute("error_message",null);
+            }
+            else if(Login.equals("hod") && user.isPermission()){
+                List<Object> allLeaves=allLeaveRepo.findByStaffPendingLeave(user.getDepartment().getDid());
                 model.addAttribute("aleave",allLeaves);
                 model.addAttribute("error_message",null);
             }
@@ -200,7 +212,7 @@ public class Staff {
             else {
                 model.addAttribute("error_message","Activation pending by admin");
             }
-            return Login.equals("staff")?"common/index":"redirect:/loginSucess";
+            return this.userPermission(Login)?"common/index":"redirect:/loginSucess";
         }
         catch(Exception e){
             return "login.html";
@@ -250,6 +262,7 @@ public class Staff {
                         nb= (float) (b+this.calDay(allLeave.getDate_from(),allLeave.getDate_to()));
                         ngl=  (float) (gl-this.calDay(allLeave.getDate_from(),allLeave.getDate_to()));
                     }
+                    if (nb==0 & nb!=0.5) leave.setBalLeave(1);
                     leave.setBalLeave(nb);
                     leave.setGetLeave(ngl);
                     leaveRepo.save(leave);
@@ -262,6 +275,68 @@ public class Staff {
             allLeaveRepo.save(allLeave);
             String Login = this.userType(auth);
             return this.userPermission(Login)?"redirect:/Staff/m-approve.html":"redirect:/loginSucess";
+        }
+        catch(Exception e){
+            return "login.html";
+        }
+    }
+    @GetMapping("Staff/get_password.html")
+    public String userPassword(Model model,Authentication auth){
+        try{
+            String Login=this.userType(auth);
+            if(this.userPermission(Login)){
+                model.addAttribute("pageTitle", "Change Password");
+                model.addAttribute("userDetails",userRepo.findByEmail(auth.getName()));
+            }
+            return this.userPermission(Login)?"common/change_password":"redirect:/loginSucess";
+        }
+        catch(Exception e){
+            return "login.html";
+        }
+    }
+    @PostMapping("Staff/password_update.html")
+    public Object updatePassword(@RequestParam Map<String,String> getParam,Model model,Authentication auth){
+        try{
+            String Login=this.userType(auth);
+            if(this.userPermission(Login)){
+                User user=userRepo.getById(Long.valueOf(getParam.get("id")));
+                BCryptPasswordEncoder be=new BCryptPasswordEncoder();
+                if (!getParam.get("password").equals("")) user.setPassword(be.encode(getParam.get("password")));
+                userRepo.save(user);
+            }
+            return this.userPermission(Login)?"redirect:/Staff/profile.html":"redirect:/loginSucess";
+        }
+        catch(Exception e){
+            return "login.html";
+        }
+    }
+    @GetMapping("Staff/profile.html")
+    public String userProfile(Model model,Authentication auth){
+        try{
+            String Login=this.userType(auth);
+            if(this.userPermission(Login)){
+                model.addAttribute("pageName","common/profile");
+                model.addAttribute("pageTitle", "My Profile");
+                model.addAttribute("userDetails",userRepo.findByEmail(auth.getName()));
+            }
+            return this.userPermission(Login)?"common/index":"redirect:/loginSucess";
+        }
+        catch(Exception e){
+            return "login.html";
+        }
+    }
+    @PostMapping("Staff/profile_update.html")
+    public Object updateProfile(@RequestParam Map<String,String> getParam,Model model,Authentication auth){
+        try{
+            String Login=this.userType(auth);
+            if(this.userPermission(Login)){
+                User user=userRepo.getById(Long.valueOf(getParam.get("id")));
+                if (!getParam.get("gender").equals("")) user.setUser_gender(getParam.get("gender"));
+                if (!getParam.get("email").equals("")) user.setEmail(getParam.get("email"));
+                if (!getParam.get("mobile_no").equals("")) user.setMobile_no(getParam.get("mobile_no"));
+                userRepo.save(user);
+            }
+            return this.userPermission(Login)?"redirect:/Staff/profile.html":"redirect:/loginSucess";
         }
         catch(Exception e){
             return "login.html";
@@ -295,7 +370,8 @@ public class Staff {
     @GetMapping("Staff/test.html")
     @ResponseBody
     public Object testResponse(Authentication auth){
-        String a ="staff";
-        return (a.equals("staff")||a.equals("hod"))?true:false;
+        //User user=userRepo.findByEmail(auth.getName());
+        //List<Object> allLeaves=allLeaveRepo.findByStaffPendingLeave(user.getDepartment().getDid());
+        return userRepo.findByEmail(auth.getName());
     }
 }

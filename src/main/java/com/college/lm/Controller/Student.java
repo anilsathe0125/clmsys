@@ -62,6 +62,7 @@ public class Student {
             User user=userRepo.findByEmail(auth.getName());
             List <AllLeave> allleave=allLeaveRepo.findByUser(user.getU_id());
             model.addAttribute("pageName","Student/m-leave");
+            model.addAttribute("responsible",userRepo.findByResponsible(user.getDepartment().getDid()));
             model.addAttribute("pageTitle", "Manage Leave");
             model.addAttribute("al",allleave);
             model.addAttribute("userDetails",user);
@@ -184,6 +185,68 @@ public class Student {
                 model.addAttribute("userDetails",userRepo.findByEmail(auth.getName()));
             }
             return Login.equals("student")?"Student/update_leave":"redirect:/loginSucess";
+        }
+        catch(Exception e){
+            return "login.html";
+        }
+    }
+    @GetMapping("Student/get_password.html")
+    public String userPassword(Model model,Authentication auth){
+        try{
+            String Login=this.userType(auth);
+            if(Login.equals("student")){
+                model.addAttribute("pageTitle", "Change Password");
+                model.addAttribute("userDetails",userRepo.findByEmail(auth.getName()));
+            }
+            return Login.equals("student")?"common/change_password":"redirect:/loginSucess";
+        }
+        catch(Exception e){
+            return "login.html";
+        }
+    }
+    @PostMapping("Student/password_update.html")
+    public Object updatePassword(@RequestParam Map<String,String> getParam,Model model,Authentication auth){
+        try{
+            String Login=this.userType(auth);
+            if(Login.equals("student")){
+                User user=userRepo.getById(Long.valueOf(getParam.get("id")));
+                BCryptPasswordEncoder be=new BCryptPasswordEncoder();
+                if (!getParam.get("password").equals("")) user.setPassword(be.encode(getParam.get("password")));
+                userRepo.save(user);
+            }
+            return Login.equals("student")?"redirect:/Staff/profile.html":"redirect:/loginSucess";
+        }
+        catch(Exception e){
+            return "login.html";
+        }
+    }
+    @GetMapping("Student/profile.html")
+    public String userProfile(Model model,Authentication auth){
+        try{
+            String Login=this.userType(auth);
+            if(Login.equals("student")){
+                model.addAttribute("pageName","common/profile");
+                model.addAttribute("pageTitle", "My Profile");
+                model.addAttribute("userDetails",userRepo.findByEmail(auth.getName()));
+            }
+            return Login.equals("student")?"common/index":"redirect:/loginSucess";
+        }
+        catch(Exception e){
+            return "login.html";
+        }
+    }
+    @PostMapping("Student/profile_update.html")
+    public Object updateProfile(@RequestParam Map<String,String> getParam,Model model,Authentication auth){
+        try{
+            String Login=this.userType(auth);
+            if(Login.equals("student")){
+                User user=userRepo.getById(Long.valueOf(getParam.get("id")));
+                if (!getParam.get("gender").equals("")) user.setUser_gender(getParam.get("gender"));
+                if (!getParam.get("email").equals("")) user.setEmail(getParam.get("email"));
+                if (!getParam.get("mobile_no").equals("")) user.setMobile_no(getParam.get("mobile_no"));
+                userRepo.save(user);
+            }
+            return Login.equals("student")?"redirect:/Student/profile.html":"redirect:/loginSucess";
         }
         catch(Exception e){
             return "login.html";
