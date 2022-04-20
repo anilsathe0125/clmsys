@@ -11,8 +11,8 @@
                         <div class="col-sm-12 position-relative mb-5">
                             <button data-toggle="modal" data-target="#mymodal" data-id="/Student/apply_leave.html" id="menu" class="position-absolute top-0 start-0 btn btn-sm btn-primary waves-effect waves-light"><span class="btn-label"><i class="fa fa-plus"></i></span>Apply Leave</button>
                             <span class="position-absolute top-0 end-0 waves-light">
-                                <b>LEAVE APPROVED BY</b><br>
-                                <b>STAFF :
+                                <b>AUTHORITIES</b><br>
+                                <b>SANCTIONER :
                                     <span th:each="res,i : ${responsible}" th:text="${i.count}+'. '+${res.first_name}+' '+${res.last_name}"></span>
                                 </b>
                             </span>

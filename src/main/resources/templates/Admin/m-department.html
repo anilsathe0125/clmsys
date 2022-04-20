@@ -28,7 +28,7 @@
                             <tr th:each="dl,itor : ${dlist}">
                                 <td th:text="${itor.count}">ID</td>
                                 <td class="d-none d-xl-table-cell" th:text="${dl.dname}">NAME</td>
-                                <td class="d-none d-xl-table-cell" th:if="${dl.status==true}"><span class="badge bg-success">UNABLE</span></td>
+                                <td class="d-none d-xl-table-cell" th:if="${dl.status==true}"><span class="badge bg-success">ENABLE</span></td>
                                 <td class="d-none d-xl-table-cell" th:if="${dl.status==false}"> <span class="badge bg-danger">DISABLE</span></td>
                                 <td class="d-none d-xl-table-cell">
                                 <button data-toggle="modal" data-target="#mymodal" th:attr="data-id=@{/Admin/department_update.html(id=${dl.did})}" id="menu" class="btn btn-sm btn-warning waves-effect waves-light"><span class="btn-label">
