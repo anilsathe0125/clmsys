@@ -5,14 +5,6 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
-	<meta name="author" content="AdminKit">
-	<meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
-
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link rel="shortcut icon" href="img/icons/icon-48x48.png" />
-
-	<link rel="canonical" href="https://demo-basic.adminkit.io/pages-sign-up.html" />
 
 	<title>Register Form</title>
 
@@ -33,30 +25,36 @@
 									<div class="text-center mt-4">
 										<h1 class="h2">Register Form</h1>
 									</div>
-									<form method="post" th:action="@{/register.html}"
-									th:object="${user}">
-									<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
-										<p class="text-danger" th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
-									</div>
+									<form method="post" th:action="@{/register.html}" th:object="${user}">
+										<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+											<p class="text-danger" th:each="err : ${#fields.errors('*')}"
+												th:text="${err}"></p>
+										</div>
 										<div class="mb-3">
 											<label class="form-label">First Name</label>
-											<input class="form-control form-control-lg" type="text" th:field="*{first_name}" placeholder="Enter your first name" />
+											<input class="form-control form-control-lg" type="text"
+												th:field="*{first_name}" placeholder="Enter your first name" />
 										</div>
 										<div class="mb-3">
 											<label class="form-label">Last Name</label>
-											<input class="form-control form-control-lg" type="text" th:field="*{last_name}" placeholder="Enter your last name" />
+											<input class="form-control form-control-lg" type="text"
+												th:field="*{last_name}" placeholder="Enter your last name" />
 										</div>
 										<div class="mb-3">
 											<label class="form-label">Email</label>
-											<input class="form-control form-control-lg" type="email" th:field="*{email}" placeholder="Enter your email" />
+											<input class="form-control form-control-lg" type="email" th:field="*{email}"
+												placeholder="Enter your email" />
 										</div>
 										<div class="mb-3">
 											<label class="form-label">Mobile Number</label>
-											<input class="form-control form-control-lg" datatype="number" type="number" th:field="*{mobile_no}" placeholder="Enter your mobile no" minlength="10" maxlength="10" required/>
+											<input class="form-control form-control-lg" type="text"
+												th:field="*{mobile_no}" placeholder="Enter your mobile no"
+												maxlength="10" pattern="\d{10}" required />
 										</div>
 										<div class="mb-3">
 											<label class="form-label">Gender</label>
-											<select class="form-control form-control-lg" th:field="*{user_gender}" placeholder="Select Type">
+											<select class="form-control form-control-lg" th:field="*{user_gender}"
+												placeholder="Select Type">
 												<option value="male">MALE</option>
 												<option value="female">FEMALE</option>
 												<option value="other">OTHER</option>
@@ -64,23 +62,27 @@
 										</div>
 										<div class="mb-3">
 											<label class="form-label">User Type</label>
-											<select class="form-control form-control-lg" th:field="*{role}" placeholder="Select Type">
+											<select class="form-control form-control-lg" th:field="*{role}"
+												placeholder="Select Type">
 												<option value="student">STUDENT</option>
 												<option value="staff">STAFF</option>
 											</select>
 										</div>
 										<div class="mb-3">
 											<label class="form-label">Select Department</label>
-											<select class="form-control form-control-lg" th:field="*{department}" placeholder="Select Department">
-												<option th:each="dl : ${depatment}" th:value="${dl.did}" th:text="${dl.dname}">Department</option>
+											<select class="form-control form-control-lg" th:field="*{department}"
+												placeholder="Select Department">
+												<option th:each="dl : ${depatment}" th:value="${dl.did}"
+													th:text="${dl.dname}">Department</option>
 											</select>
 										</div>
 										<div class="mb-3">
 											<label class="form-label">Password</label>
-											<input class="form-control form-control-lg" type="password" name="password" placeholder="Enter password" />
+											<input class="form-control form-control-lg" type="password" name="password"
+												placeholder="Enter password" />
 										</div>
 										<div class="text-center mt-3">
-											<input type="submit" value="Sign up" class="btn btn-lg btn-primary"/>
+											<input type="submit" value="Sign up" class="btn btn-lg btn-primary" />
 										</div>
 									</form>
 								</div>

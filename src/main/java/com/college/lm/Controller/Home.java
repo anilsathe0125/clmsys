@@ -17,46 +17,49 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-
 @Controller
-public class Home  {
+public class Home {
     @Autowired
     private UserRepository userRepo;
     @Autowired
     private DepartMentRepo departMentRepo;
     @Autowired
     private LeaveRepo leaveRepo;
+
     @GetMapping("index.html")
-    public String getHome(Model model){
-        model.addAttribute("pageName","common/index");
+    public String getHome(Model model) {
+        model.addAttribute("pageName", "common/index");
         model.addAttribute("pageTitle", "College Leave Management System");
         return "common/index";
     }
+
     @GetMapping("/login.html")
     public String getLogin() {
         return "login";
     }
+
     @GetMapping("register.html")
-    public String Register(Model model){
-        model.addAttribute("user",new User());
-        model.addAttribute("depatment",departMentRepo.findAllByStatus(true));
+    public String Register(Model model) {
+        model.addAttribute("user", new User());
+        model.addAttribute("depatment", departMentRepo.findAllByStatus(true));
         return "register";
     }
+
     @PostMapping("register.html")
-    public String setRegister(User user,final BindingResult bindingResult, final Model model){
+    public String setRegister(User user, final BindingResult bindingResult, final Model model) {
         model.addAttribute(user);
-        BCryptPasswordEncoder ecode=new BCryptPasswordEncoder();
+        BCryptPasswordEncoder ecode = new BCryptPasswordEncoder();
         user.setPassword(ecode.encode(user.getPassword()));
-        Leave leave=new Leave();
+        Leave leave = new Leave();
         leave.setTotal(6);
         leave.setGetLeave(0);
         leave.setBalLeave(0);
-            try {
-            if (user.getPassword().length()<=6)
+        try {
+            if (user.getPassword().length() <= 6)
                 throw new CustomExceotion("Password not less 6 than");
-            if (user.getMobile_no().length()!=10)
+            if (user.getMobile_no().length() != 10)
                 throw new CustomExceotion("Mobile number length not 10");
-            if(userRepo.findByEmail(user.getEmail())!=null){
+            if (userRepo.findByEmail(user.getEmail()) != null) {
                 throw new UserExitException("User Email already exit");
             }
             if (user.getRole().equals("student")) {
@@ -64,43 +67,40 @@ public class Home  {
                 leave.setUser(userRepo.save(user));
                 leave.setDete("" + System.currentTimeMillis());
                 leaveRepo.save(leave);
-            }
-            else {
+            } else {
                 leave.setUser(userRepo.save(user));
+                user.setStatus(" ");
                 leave.setDete("" + System.currentTimeMillis());
                 leaveRepo.save(leave);
             }
             return "login.html";
-            } catch (UserExitException | CustomExceotion e) {
-                bindingResult.rejectValue("email", "user.email",e.getMessage());
-                model.addAttribute("user", user);
-                return "register";
+        } catch (UserExitException | CustomExceotion e) {
+            bindingResult.rejectValue("email", "user.email", e.getMessage());
+            model.addAttribute("user", user);
+            return "register";
         }
     }
+
     @GetMapping("loginSucess")
-    public String userRedirect(Authentication auth){
-            try{
-            String userName=auth.getName();
-            User uObj=userRepo.findByEmail(userName);
-            String UserRoll=uObj.getRole();
-            if(UserRoll.equals("admin")){
-            return "redirect:Admin/dashboard.html";
+    public String userRedirect(Authentication auth) {
+        try {
+            String userName = auth.getName();
+            User uObj = userRepo.findByEmail(userName);
+            String UserRoll = uObj.getRole();
+            if (UserRoll.equals("admin")) {
+                return "redirect:Admin/dashboard.html";
+            } else if (UserRoll.equals("student")) {
+                return "redirect:Student/dashboard.html";
+            } else if (UserRoll.equals("hod")) {
+                return "redirect:Staff/dashboard.html";
+            } else if (UserRoll.equals("staff")) {
+                return "redirect:Staff/dashboard.html";
+            } else {
+                return "redirect:/login.html";
             }
-            else if(UserRoll.equals("student")){
-            return "redirect:Student/dashboard.html";
-            }
-            else if(UserRoll.equals("hod")){
-            return "redirect:Staff/dashboard.html";
-            }
-            else if(UserRoll.equals("staff")){
-            return "redirect:Staff/dashboard.html";
-            }
-            else{
+        } catch (Exception e) {
             return "redirect:/login.html";
-            }
-            }catch(Exception e){
-               return "redirect:/login.html";
-            }
+        }
     }
 
 }

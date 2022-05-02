@@ -8,45 +8,118 @@
     <meta name="author" content="College Leave Management System">
     <meta name="keywords" content="College Leave Management System, SpringBoot application">
     <meta th:name="${_csrf.parameterName}" th:content="${_csrf.token}"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
 
     <title>College Leave Management Dashboard</title>
 
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/appmain.css" rel="stylesheet">
-    <link href="/css/custom.css" rel="stylesheet">
+    <link href="static/css/custom.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/09307f62ef.js" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <style>
+    .container-home{
+    display: flex;
+    flex-flow: column;
+    width: 100vh;
+    height: 68vh;
+    background-image: url("/img/wave.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: #101314;
+    box-shadow: 6px 8px 20px 3px #425c64;
+    align-items: center;
+    position: absolute;
+    justify-content: center;
+    align-self: center;
+    align-content: center;
+        }
+    body{
+    display: flex;
+    position: relative;
+    justify-content: center;
+    }
+    .title-project{
+    font-size: 42px;
+    position: absolute;
+    top: 0;
+    padding: 60px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #567dba;
+    font-family: fantasy;
+    z-index: 1;
+    text-shadow: 2px 3px 1px #1d2d3e;
+    }
+    .processbar{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    background-image: linear-gradient(#101314, #1f2a3b);
+    height: 1.4vh;
+    }
+    .cimg{
+        vertical-align: middle;
+        border-style: none;
+        width: 37%;
+        position: absolute;
+        display: flex;
+        top: 106px;
+        z-index: 0;
+    }
+    .processbar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-image: linear-gradient( -45deg, rgba(255, 255, 255, 0.2) 25%, 
+    transparent 25%, transparent 50%,
+    rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%,
+    transparent 75%, transparent );
+    background-size: 26px 26px;
+    animation: move 2s linear infinite;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    overflow: hidden;
+    }
+    @keyframes move {
+     0% {
+        background-position: 0 0;
+        }
+    100% {
+        background-position: 26px 26px;
+        }
+    }
+    </style>
 </head>
 <body style="background:#2e2e2e;">
-<div class="home-play"> <i class="fa-solid fa-circle-play"></i> </div>
-
-<div id="mymodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog">
-        <div class="modal-content p-0 b-0">
-            <div class="panel panel-color panel-primary">
-                <div class="panel-heading">
-                    <button type="button" class="close m-t-5" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 class="panel-title text-light" th:text="${pageTitle}"></h3>
-                </div>
-                <div class="modal-body">
-                    <div id="modal-loader" style="display: none; text-align: center;"> <img class="w-50" src="img/preloader.gif" /> </div>
-
-                    <!-- content will be load here -->
-                    <div id="dynamic-content"></div>
-                </div>
-                <div class="modal-footer"> </div>
-            </div>
-        </div>
-    </div>
+<div class="container-home">
+<span class="title-project">College Leave Management System</span>
+<img class="cimg" src="https://cdn.shrm.org/image/upload/c_crop%2ch_552%2cw_552%2cx_0%2cy_0/c_fit%2cf_auto%2cq_auto%2cw_767/v1/Tools%20and%20Samples/18_1076_HubPage_Illustrations_FNL_1x1_PTO_io2q6v?databtoa=eyIxeDEiOnsieCI6MCwieSI6MCwieDIiOjU1MiwieTIiOjU1MiwidyI6NTUyLCJoIjo1NTJ9fQ%3d%3d"/>
+<span id="processbar" class="processbar"></span>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function() {
-    $("#mymodal.modal.fade").toggle();
-    
+    var pb=document.getElementById("processbar");
+    let i=0;
+    setInterval(()=>{
+    i=i+1;
+    if(i==10){
+        document.location='/login.html';
+        i=0;
+    }
+    pb.style.width=(i*10)+"%";
+    },1000);
     });
 </script>
 <script type='text/javascript' src="/js/app.js"></script>

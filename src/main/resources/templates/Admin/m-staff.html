@@ -37,7 +37,7 @@
                     <td role="button" th:attr="onclick=|setPermission_staff(${stlist.u_id},'1')|" th:text="${stlist.permission}" th:if="${stlist.permission==false}"> Permission </td>
                     <td role="button" th:attr="onclick=|setPermission_staff(${stlist.u_id},'0')|" th:text="${stlist.permission}" th:if="${stlist.permission==true}"> Permission </td>
                     <td role="button" th:attr="onclick=|disable_staff(${stlist.u_id})|" class="d-none d-xl-table-cell" th:if="${stlist.status=='active'}"><span class="badge bg-success">ENABLE</span></td>
-                    <td role="button" th:attr="onclick=|unable_staff(${stlist.u_id})|" class="d-none d-xl-table-cell" th:if="${stlist.status==null}"> <span class="badge bg-danger">DISABLE</span></td>
+                    <td role="button" th:attr="onclick=|unable_staff(${stlist.u_id})|" class="d-none d-xl-table-cell" th:if="${stlist.status==' '}"> <span class="badge bg-danger">DISABLE</span></td>
                     <td th:text="${stlist.department.dname}"> Department </td>
                 </tr>
                 </tbody>

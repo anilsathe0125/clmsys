@@ -9,7 +9,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Department Status</label>
                                         <select class="form-control form-control-lg" th:field="*{status}" placeholder="Select Status">
-                                            <option value="1" th:if="(${status}==true ? 'selected' :'')">UNABLE</option>
+                                            <option value="1" th:if="(${status}==true ? 'selected' :'')">ENABLE</option>
                                             <option value="0" th:if="(${status}==false ? 'selected' :'')">DISABLE</option>
                                         </select>
                                     </div>

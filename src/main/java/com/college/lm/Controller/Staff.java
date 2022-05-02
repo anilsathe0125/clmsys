@@ -57,12 +57,12 @@ public class Staff {
                 model.addAttribute("userDetails", user);
                 return this.userPermission(Login)?"common/index":"redirect:/loginSucess";
             }
+            else return "redirect:/loginSucess";
             }
             catch (Exception e)
             {
                 return "redirect:/login.html";
             }
-        return "";
     }
     //---------------------
     @GetMapping("Staff/m-leave.html")
